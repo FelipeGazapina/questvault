@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="QuestVault transforma hábitos reais em quests de pixel art. XP, streaks, loot shop e muito mais.">
+  <meta name="theme-color" content="#1a1c2c">
+  <title>QuestVault — sua vida virou RPG</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Pular para conteúdo</a>
+
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <symbol id="hero-sprite" viewBox="0 0 12 12">
+      <rect x="3" y="0" width="6" height="1" fill="#333c57"/>
+      <rect x="2" y="1" width="8" height="2" fill="#257179"/>
+      <rect x="3" y="3" width="6" height="5" fill="#ef7d57"/>
+      <rect x="4" y="5" width="1" height="1" fill="#333c57"/>
+      <rect x="7" y="5" width="1" height="1" fill="#333c57"/>
+      <rect x="4" y="7" width="4" height="1" fill="#b13e53"/>
+      <rect x="3" y="9" width="6" height="3" fill="#38b764"/>
+      <rect x="5" y="9" width="2" height="3" fill="#ffcd75"/>
+    </symbol>
+    <symbol id="flame-sprite" viewBox="0 0 8 10">
+      <rect x="4" y="0" width="1" height="1" fill="#ef7d57"/>
+      <rect x="3" y="1" width="2" height="1" fill="#ef7d57"/>
+      <rect x="3" y="2" width="3" height="1" fill="#ef7d57"/>
+      <rect x="2" y="3" width="4" height="2" fill="#ef7d57"/>
+      <rect x="1" y="5" width="6" height="3" fill="#ef7d57"/>
+      <rect x="3" y="5" width="2" height="3" fill="#ffcd75"/>
+      <rect x="2" y="8" width="4" height="1" fill="#ffcd75"/>
+      <rect x="3" y="9" width="2" height="1" fill="#b13e53"/>
+    </symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#">
+        <svg class="logo-mark" aria-hidden="true"><use href="#hero-sprite"/></svg>
+        <span class="logo-text">QUESTVAULT</span>
+      </a>
+      <nav class="nav-desktop" aria-label="Principal">
+        <a href="#features" data-i18n="nav.features">RECURSOS</a>
+        <a href="#how" data-i18n="nav.how">COMO FUNCIONA</a>
+        <a href="#download" data-i18n="nav.download">BAIXAR</a>
+        <a href="#future" data-i18n="nav.future">O QUE VEM</a>
+      </nav>
+      <div class="header-actions">
+        <div class="lang-toggle" role="group" aria-label="Idioma">
+          <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-mobile" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <nav id="nav-mobile" class="nav-mobile" aria-label="Mobile">
+      <a href="#features" data-i18n="nav.features">RECURSOS</a>
+      <a href="#how" data-i18n="nav.how">COMO FUNCIONA</a>
+      <a href="#download" data-i18n="nav.download">BAIXAR</a>
+      <a href="#future" data-i18n="nav.future">O QUE VEM</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1 data-i18n="hero.title" data-i18n-html>Sua vida.<br><em>Suas quests.</em><br>Seu loot.</h1>
+          <p data-i18n="hero.lead">Um RPG de pixel art para a vida real.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#download" data-i18n="hero.download">BAIXAR APP</a>
+            <a class="btn btn-secondary" href="#how" data-i18n="hero.how">COMO FUNCIONA</a>
+          </div>
+          <p class="hero-note" data-i18n="hero.note">Grátis para jogar · PT-BR e EN</p>
+        </div>
+        <div class="hero-visual">
+          <div class="phone" aria-hidden="true">
+            <p class="phone-label" data-i18n="phone.label">QUEST BOARD</p>
+            <div class="hud">
+              <svg class="hud-avatar" viewBox="0 0 12 12"><use href="#hero-sprite"/></svg>
+              <div class="hud-who">
+                <div class="hud-name">HERO · <span class="hud-lv">LV 7</span></div>
+                <div class="segbar" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+              </div>
+            </div>
+            <div class="streak">
+              <svg width="16" height="20"><use href="#flame-sprite"/></svg>
+              <span data-i18n="phone.streak">sequência de 5 dias</span>
+            </div>
+            <p class="screen-title">QUEST BOARD</p>
+            <article class="quest-card">
+              <div class="quest-check"></div>
+              <div class="quest-body">
+                <div class="quest-title">Run 2 km</div>
+                <div class="quest-reward">+12 XP</div>
+              </div>
+              <span class="quest-tag">DAILY</span>
+            </article>
+            <article class="quest-card">
+              <div class="quest-check"></div>
+              <div class="quest-body">
+                <div class="quest-title">Clean the garage</div>
+                <div class="quest-reward">+34 XP</div>
+              </div>
+              <span class="quest-tag">SIDE</span>
+            </article>
+            <article class="quest-card boss">
+              <div class="quest-check"></div>
+              <div class="quest-body">
+                <div class="quest-title">Finish the book</div>
+                <div class="quest-reward">+142 XP</div>
+              </div>
+              <span class="quest-tag boss">BOSS</span>
+            </article>
+            <div class="phone-nav">
+              <span class="on" data-i18n="phone.nav.board">BOARD</span>
+              <span data-i18n="phone.nav.pool">POOL</span>
+              <span data-i18n="phone.nav.shop">SHOP</span>
+              <span data-i18n="phone.nav.log">LOG</span>
+              <span data-i18n="phone.nav.hero">HERO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap">
+        <p class="section-label" data-i18n="how.label">COMO FUNCIONA</p>
+        <h2 class="section-title" data-i18n="how.title">Três passos. Loop viciante.</h2>
+        <p class="section-lead" data-i18n="how.lead">Você cria o pool. O jogo sorteia a mão.</p>
+        <div class="steps">
+          <article class="panel step">
+            <div class="step-num">01</div>
+            <h3 data-i18n="how.1.title">FORJE SEU POOL</h3>
+            <p data-i18n="how.1.body">Cadastre tarefas reais.</p>
+          </article>
+          <article class="panel step">
+            <div class="step-num">02</div>
+            <h3 data-i18n="how.2.title">COMPLETE & GANHE XP</h3>
+            <p data-i18n="how.2.body">Marque como feita e evolua.</p>
+          </article>
+          <article class="panel step">
+            <div class="step-num">03</div>
+            <h3 data-i18n="how.3.title">MONTE SEU LOOT</h3>
+            <p data-i18n="how.3.body">Salve o que você quer na Loot Shop.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <p class="section-label" data-i18n="feat.label">RECURSOS</p>
+        <h2 class="section-title" data-i18n="feat.title">Tudo que um RPG de vida precisa</h2>
+        <p class="section-lead" data-i18n="feat.lead">O jogo puro — diversão real.</p>
+        <div class="features-grid">
+          <article class="panel feature">
+            <div class="feature-icon"><span class="pixel-glyph" aria-hidden="true">Q</span></div>
+            <h3 data-i18n="feat.1.title">QUEST BOARD</h3>
+            <p data-i18n="feat.1.body">Mão sorteada por período.</p>
+          </article>
+          <article class="panel feature">
+            <div class="feature-icon"><span class="pixel-glyph" aria-hidden="true">P</span></div>
+            <h3 data-i18n="feat.2.title">QUEST POOL</h3>
+            <p data-i18n="feat.2.body">Sua biblioteca de tarefas.</p>
+          </article>
+          <article class="panel feature">
+            <div class="feature-icon"><img src="assets/sprites/loot/headset.png" width="36" height="36" alt=""></div>
+            <h3 data-i18n="feat.3.title">LOOT SHOP</h3>
+            <p data-i18n="feat.3.body">Wishlist com ícones pixel.</p>
+          </article>
+          <article class="panel feature">
+            <div class="feature-icon" aria-hidden="true"><svg width="36" height="36"><use href="#hero-sprite"/></svg></div>
+            <h3 data-i18n="feat.4.title">PERSONAGEM</h3>
+            <p data-i18n="feat.4.body">Avatar, nível e XP.</p>
+          </article>
+          <article class="panel feature">
+            <div class="feature-icon"><span class="pixel-glyph" aria-hidden="true">L</span></div>
+            <h3 data-i18n="feat.5.title">QUEST LOG</h3>
+            <p data-i18n="feat.5.body">Dashboard de vitórias.</p>
+          </article>
+          <article class="panel feature">
+            <div class="feature-icon" aria-hidden="true"><svg width="24" height="30"><use href="#flame-sprite"/></svg></div>
+            <h3 data-i18n="feat.6.title">STREAK FLAME</h3>
+            <p data-i18n="feat.6.body">Sequência diária no board.</p>
+          </article>
+        </div>
+        <p class="section-lead" style="margin-top:28px" data-i18n="loot.caption">Ícones de loot na wishlist.</p>
+        <div class="loot-row" aria-hidden="true">
+          <div class="loot-chip"><img src="assets/sprites/loot/headset.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/pizza.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/gamepad.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/sneaker.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/book.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/phone.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/coffee.png" alt=""></div>
+          <div class="loot-chip"><img src="assets/sprites/loot/gift.png" alt=""></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section download-section" id="download">
+      <div class="wrap">
+        <p class="section-label" data-i18n="dl.label">BAIXAR</p>
+        <h2 class="section-title" data-i18n="dl.title">Jogue agora pelo site</h2>
+        <p class="section-lead" data-i18n="dl.lead">Enquanto aguardamos aprovação nas lojas.</p>
+        <div class="download-grid">
+          <div class="download-primary panel">
+            <a
+              id="pwa-install"
+              class="btn btn-primary btn-disabled"
+              href="app/?install=1"
+              aria-disabled="true"
+              data-i18n="dl.pwa"
+            >INSTALAR WEB APP</a>
+            <p class="download-meta" data-i18n="dl.pwa.sub">Adiciona à tela inicial</p>
+            <a
+              id="pwa-open"
+              class="btn btn-secondary btn-disabled"
+              href="app/"
+              aria-disabled="true"
+              data-i18n="dl.pwa.open"
+            >ABRIR WEB APP</a>
+            <p id="pwa-missing" class="download-meta" data-i18n="dl.pwa.missing" hidden>Web app não publicada.</p>
+            <hr class="dl-divider" aria-hidden="true">
+            <a
+              id="apk-download"
+              class="btn btn-secondary btn-disabled"
+              href="downloads/questvault.apk"
+              download
+              aria-disabled="true"
+              data-i18n="dl.android"
+            >BAIXAR APK ANDROID</a>
+            <p class="download-meta" data-i18n="dl.android.sub">Arquivo .apk</p>
+            <p id="apk-missing" class="download-meta" data-i18n="dl.missing" hidden>APK ainda não publicado.</p>
+            <div class="store-row">
+              <span class="store-badge btn-disabled" aria-disabled="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 12.05a4.98 4.98 0 0 1-1.4 3.45 4.98 4.98 0 0 1-7.1 0 4.98 4.98 0 0 1 0-7.1 4.98 4.98 0 0 1 3.45-1.4V2.05a9.95 9.95 0 1 0 9.9 9.9h-3.85z"/></svg>
+                <span><strong data-i18n="dl.play.soon">GOOGLE PLAY</strong><span data-i18n="dl.play.sub">Em breve</span></span>
+              </span>
+              <span class="store-badge btn-disabled" aria-disabled="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c-2.5 0-4.6 1.4-5.7 3.5C9.7 4.4 7.6 3 5.1 3 2.3 3 0 5.3 0 8.1c0 5.3 7.2 10.4 9 11.6.3.2.7.2 1 0 1.8-1.2 9-6.3 9-11.6 0-2.8-2.3-5.1-5.5-5.1z"/></svg>
+                <span><strong data-i18n="dl.ios.soon">APP STORE</strong><span data-i18n="dl.ios.sub">Em breve</span></span>
+              </span>
+            </div>
+          </div>
+          <aside class="panel panel-dark">
+            <h3 class="section-label" style="margin-bottom:16px" data-i18n="dl.req.title">ANTES DE INSTALAR</h3>
+            <ul class="req-list">
+              <li data-i18n="dl.req.1">Android 8+</li>
+              <li data-i18n="dl.req.2">Fontes conhecidas</li>
+              <li data-i18n="dl.req.3">iOS: aguarde a loja</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section future" id="future">
+      <div class="wrap">
+        <p class="section-label" data-i18n="future.label">HORIZONTE</p>
+        <article class="panel">
+          <div class="future-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 12 12"><use href="#flame-sprite"/></svg>
+          </div>
+          <h2 class="section-title" data-i18n="future.title">A aventura só começou</h2>
+          <p data-i18n="future.body">Estamos forjando ideias grandes para o futuro.</p>
+          <p class="hint" data-i18n="future.hint">FIQUE DE OLHO</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p class="footer-brand">QUESTVAULT</p>
+        <p data-i18n="footer.tagline">Seu personagem é você.</p>
+      </div>
+      <div>
+        <p data-i18n="footer.copy">© QuestVault</p>
+        <p><a href="mailto:hello@questvault.app" data-i18n="footer.contact">Contato</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

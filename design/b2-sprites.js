@@ -1,0 +1,10 @@
+function px(parent,scale,groups){for(const [color,cells] of groups){for(const [x,y,w,h] of cells){Insert(parent,{type:"rectangle",name:"pixel",x:x*scale,y:y*scale,width:w*scale,height:h*scale,fill:color})}}}
+componentsArea=Insert(document,{type:"frame",name:"Components",x:0,y:0,layout:"horizontal",gap:48,padding:32,alignItems:"end",fill:"#101120"})
+spriteCoin=Insert(componentsArea,{type:"frame",name:"Sprite Coin",reusable:true,layout:"none",width:16,height:16})
+px(spriteCoin,2,[["$ink",[[2,0,4,1],[1,1,1,1],[6,1,1,1],[0,2,1,4],[7,2,1,4],[1,6,1,1],[6,6,1,1],[2,7,4,1]]],["$gold",[[2,1,4,1],[1,2,6,4],[2,6,4,1]]],["$white",[[2,2,2,1]]],["$ember",[[5,3,2,3]]]])
+spriteChest=Insert(componentsArea,{type:"frame",name:"Sprite Chest",reusable:true,layout:"none",width:128,height:104})
+px(spriteChest,8,[["$ember",[[1,1,14,4]]],["$gold",[[1,2,14,1]]],["$blood",[[1,5,14,1],[1,6,14,6]]],["$deep",[[1,6,14,1]]],["$ink",[[1,0,14,1],[0,1,1,5],[15,1,1,5],[0,6,1,7],[15,6,1,7],[1,12,14,1],[6,4,5,1]]],["$gold",[[6,5,5,4]]],["$ink",[[8,6,1,2]]]])
+spriteFlame=Insert(componentsArea,{type:"frame",name:"Sprite Flame",reusable:true,layout:"none",width:16,height:20})
+px(spriteFlame,2,[["$ember",[[4,0,1,1],[3,1,2,1],[3,2,3,1],[2,3,4,2],[1,5,6,3]]],["$gold",[[3,5,2,3],[2,8,4,1]]],["$blood",[[3,9,2,1]]]])
+spriteHero=Insert(componentsArea,{type:"frame",name:"Sprite Hero",reusable:true,layout:"none",width:36,height:36})
+px(spriteHero,3,[["$ink",[[3,0,6,1]]],["$tealdark",[[2,1,8,2],[2,3,1,5],[9,3,1,5]]],["$ember",[[3,3,6,5]]],["$ink",[[4,5,1,1],[7,5,1,1]]],["$blood",[[4,7,4,1]]],["$ink",[[2,8,8,1]]],["$leaf",[[3,9,6,3]]],["$gold",[[5,9,2,3]]]])

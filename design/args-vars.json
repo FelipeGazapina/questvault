@@ -1,0 +1,24 @@
+{
+  "variables": {
+    "night": {"type": "color", "value": "#1a1c2c"},
+    "deep": {"type": "color", "value": "#5d275d"},
+    "blood": {"type": "color", "value": "#b13e53"},
+    "ember": {"type": "color", "value": "#ef7d57"},
+    "gold": {"type": "color", "value": "#ffcd75"},
+    "mint": {"type": "color", "value": "#a7f070"},
+    "leaf": {"type": "color", "value": "#38b764"},
+    "tealdark": {"type": "color", "value": "#257179"},
+    "navy": {"type": "color", "value": "#29366f"},
+    "blue": {"type": "color", "value": "#3b5dc9"},
+    "sky": {"type": "color", "value": "#41a6f6"},
+    "ice": {"type": "color", "value": "#73eff7"},
+    "white": {"type": "color", "value": "#f4f4f4"},
+    "fog": {"type": "color", "value": "#94b0c2"},
+    "slate": {"type": "color", "value": "#566c86"},
+    "ink": {"type": "color", "value": "#333c57"},
+    "panel-dark": {"type": "color", "value": "#14162a"},
+    "font-head": {"type": "string", "value": "Press Start 2P"},
+    "font-body": {"type": "string", "value": "VT323"},
+    "font-money": {"type": "string", "value": "Inter"}
+  }
+}

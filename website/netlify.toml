@@ -1,0 +1,20 @@
+# Netlify — marketing site + downloads
+
+[build]
+  base = "website"
+  publish = "."
+  command = "node scripts/netlify-build.mjs"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/downloads/*"
+  [headers.values]
+    Content-Disposition = "attachment"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"

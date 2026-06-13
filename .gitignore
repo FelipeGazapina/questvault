@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+
+# Convex local
+.convex/
+**/.convex/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Build artifacts (regenerated in CI)
+website/app/*
+!website/app/README.md
+
+# Logs
+*.log
+npm-debug.log*
+
+# Netlify
+.netlify/
+
+# Railway
+.railway/
+
+# APK binaries (optional — remove line if you want APK in git)
+website/downloads/*.apk

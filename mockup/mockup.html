@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuestVault — pixel UI mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#1a1c2c; --deep:#5d275d; --blood:#b13e53; --ember:#ef7d57;
+    --gold:#ffcd75; --mint:#a7f070; --leaf:#38b764; --tealdark:#257179;
+    --navy:#29366f; --blue:#3b5dc9; --sky:#41a6f6; --ice:#73eff7;
+    --white:#f4f4f4; --fog:#94b0c2; --slate:#566c86; --ink:#333c57;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:#101120; color:var(--white); font-family:'VT323',monospace; padding:32px 16px 64px}
+  .pagehead{text-align:center; margin-bottom:36px}
+  .pagehead h1{font-family:'Press Start 2P',monospace; font-size:22px; color:var(--gold); letter-spacing:2px}
+  .pagehead p{color:var(--fog); font-size:20px; margin-top:12px}
+  .phones{display:flex; flex-wrap:wrap; gap:40px; justify-content:center; align-items:flex-start}
+
+  .phone{width:380px; background:var(--night); border:4px solid var(--ink);
+    box-shadow:10px 10px 0 rgba(0,0,0,.45); padding:14px 14px 0; image-rendering:pixelated}
+  .screenlabel{font-family:'Press Start 2P',monospace; font-size:10px; color:var(--slate);
+    text-align:center; margin:-4px 0 10px}
+
+  .hud{display:flex; align-items:center; gap:10px; background:var(--navy);
+    border:3px solid var(--ink); padding:8px 10px; margin-bottom:14px}
+  .hud .who{flex:1}
+  .hud .name{font-family:'Press Start 2P',monospace; font-size:9px; color:var(--white)}
+  .hud .lv{font-size:18px; color:var(--sky)}
+  .bar{height:12px; border:2px solid var(--ink); background:var(--deep); margin-top:4px; position:relative}
+  .bar>i{display:block; height:100%;
+    background:repeating-linear-gradient(90deg,var(--sky) 0 8px,#2f7fd0 8px 10px)}
+  .bar.goldbar>i{background:repeating-linear-gradient(90deg,var(--gold) 0 8px,#d9a84f 8px 10px)}
+  .pouch{display:flex; align-items:center; gap:6px; background:var(--ink); padding:6px 8px; border:2px solid #000}
+  .pouch b{font-family:'Press Start 2P',monospace; font-size:10px; color:var(--gold)}
+
+  .title{font-family:'Press Start 2P',monospace; font-size:13px; color:var(--white);
+    text-align:center; margin:4px 0 12px; letter-spacing:1px}
+  .streak{display:flex; justify-content:center; align-items:center; gap:8px;
+    color:var(--ember); font-size:20px; margin:-6px 0 12px}
+
+  .card{background:var(--navy); border:3px solid var(--ink); padding:10px 12px; margin-bottom:10px;
+    display:flex; align-items:center; gap:12px}
+  .card.done{background:#1f3d33; border-color:var(--leaf)}
+  .card.boss{border-color:var(--gold); background:#3a2f4a}
+  .chk{width:22px; height:22px; border:3px solid var(--slate); background:var(--night); flex:none}
+  .done .chk{background:var(--mint); border-color:var(--leaf)}
+  .q{flex:1}
+  .q .qt{font-size:21px; line-height:1.05; color:var(--white)}
+  .done .qt{color:var(--mint); text-decoration:line-through}
+  .q .qr{font-size:17px; margin-top:2px}
+  .qr .xp{color:var(--sky)} .qr .gp{color:var(--gold)}
+  .bosstag{font-family:'Press Start 2P',monospace; font-size:8px; color:var(--gold);
+    background:var(--ink); padding:4px 6px; flex:none}
+
+  .btn{display:block; width:100%; text-align:center; font-family:'Press Start 2P',monospace;
+    font-size:11px; padding:12px 8px; border:3px solid var(--ink); cursor:pointer;
+    box-shadow:4px 4px 0 rgba(0,0,0,.5); margin:6px 0 14px}
+  .btn.green{background:var(--leaf); color:#0c2a18}
+  .btn.gold{background:var(--gold); color:#4a3208}
+  .btn.ghost{background:var(--night); color:var(--slate); box-shadow:none; cursor:default}
+
+  .vaultbox{text-align:center; padding:6px 0 2px}
+  .balancelabel{font-family:'Press Start 2P',monospace; font-size:9px; color:var(--fog); margin-top:10px}
+  .balance{font-family:'Press Start 2P',monospace; font-size:20px; color:var(--gold); margin:8px 0 2px}
+  .balance.small{font-size:14px; color:var(--ice)}
+  .ledger{background:#14162a; border:3px solid var(--ink); padding:8px 10px; margin-bottom:14px}
+  .ledger h4{font-family:'Press Start 2P',monospace; font-size:8px; color:var(--slate); margin-bottom:8px}
+  .lrow{display:flex; justify-content:space-between; gap:8px;
+    font-family:Inter,system-ui,sans-serif; font-size:12.5px; padding:5px 0; border-bottom:1px solid #232642}
+  .lrow:last-child{border-bottom:0}
+  .lrow .desc{color:var(--fog)} .lrow .amt{font-weight:600}
+  .amt.in{color:var(--mint)} .amt.conv{color:var(--gold)} .amt.out{color:var(--ember)}
+  .escape{text-align:center; font-size:17px; color:var(--slate); padding-bottom:14px}
+  .escape a{color:var(--slate)}
+
+  .item{background:var(--navy); border:3px solid var(--ink); padding:10px 12px; margin-bottom:12px}
+  .item .row1{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
+  .item .it{font-size:21px; color:var(--white)}
+  .item .price{font-family:Inter,system-ui,sans-serif; font-size:13px; font-weight:600; color:var(--gold); flex:none}
+  .item .hint{font-size:16px; color:var(--fog); margin:2px 0 6px}
+  .item .bar{margin-top:0}
+  .item.ready{border-color:var(--gold)}
+  .item .claim{margin:10px 0 2px}
+
+  .nav{display:flex; border-top:3px solid var(--ink); margin:4px -14px 0; background:#14162a}
+  .nav div{flex:1; text-align:center; padding:10px 0 12px; font-family:'Press Start 2P',monospace;
+    font-size:7px; color:var(--slate)}
+  .nav div.on{color:var(--gold); background:var(--night)}
+  .nav svg{display:block; margin:0 auto 5px}
+
+  .palette{display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:48px}
+  .palette i{width:28px; height:28px; border:2px solid #000; display:block}
+  .foot{text-align:center; color:var(--slate); font-size:18px; margin-top:14px}
+  svg{image-rendering:pixelated; shape-rendering:crispEdges}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="coin" viewBox="0 0 8 8">
+      <rect x="2" y="0" width="4" height="1" fill="#333c57"/>
+      <rect x="1" y="1" width="1" height="1" fill="#333c57"/><rect x="6" y="1" width="1" height="1" fill="#333c57"/>
+      <rect x="2" y="1" width="4" height="1" fill="#ffcd75"/>
+      <rect x="0" y="2" width="1" height="4" fill="#333c57"/><rect x="7" y="2" width="1" height="4" fill="#333c57"/>
+      <rect x="1" y="2" width="6" height="4" fill="#ffcd75"/>
+      <rect x="2" y="2" width="2" height="1" fill="#f4f4f4"/>
+      <rect x="5" y="3" width="2" height="3" fill="#ef7d57"/>
+      <rect x="1" y="6" width="1" height="1" fill="#333c57"/><rect x="6" y="6" width="1" height="1" fill="#333c57"/>
+      <rect x="2" y="6" width="4" height="1" fill="#ffcd75"/>
+      <rect x="2" y="7" width="4" height="1" fill="#333c57"/>
+    </symbol>
+    <symbol id="chest" viewBox="0 0 16 14">
+      <rect x="1" y="0" width="14" height="1" fill="#333c57"/>
+      <rect x="0" y="1" width="1" height="5" fill="#333c57"/><rect x="15" y="1" width="1" height="5" fill="#333c57"/>
+      <rect x="1" y="1" width="14" height="4" fill="#ef7d57"/>
+      <rect x="1" y="2" width="14" height="1" fill="#ffcd75"/>
+      <rect x="1" y="5" width="14" height="1" fill="#b13e53"/>
+      <rect x="0" y="6" width="1" height="7" fill="#333c57"/><rect x="15" y="6" width="1" height="7" fill="#333c57"/>
+      <rect x="1" y="6" width="14" height="6" fill="#b13e53"/>
+      <rect x="1" y="6" width="14" height="1" fill="#5d275d"/>
+      <rect x="6" y="4" width="5" height="1" fill="#333c57"/>
+      <rect x="6" y="5" width="5" height="4" fill="#ffcd75"/>
+      <rect x="8" y="6" width="1" height="2" fill="#333c57"/>
+      <rect x="1" y="12" width="14" height="1" fill="#333c57"/>
+    </symbol>
+    <symbol id="flame" viewBox="0 0 8 10">
+      <rect x="4" y="0" width="1" height="1" fill="#ef7d57"/>
+      <rect x="3" y="1" width="2" height="1" fill="#ef7d57"/>
+      <rect x="3" y="2" width="3" height="1" fill="#ef7d57"/>
+      <rect x="2" y="3" width="4" height="2" fill="#ef7d57"/>
+      <rect x="1" y="5" width="6" height="3" fill="#ef7d57"/>
+      <rect x="3" y="5" width="2" height="3" fill="#ffcd75"/>
+      <rect x="2" y="8" width="4" height="1" fill="#ffcd75"/>
+      <rect x="3" y="9" width="2" height="1" fill="#b13e53"/>
+    </symbol>
+    <symbol id="hero" viewBox="0 0 12 12">
+      <rect x="3" y="0" width="6" height="1" fill="#333c57"/>
+      <rect x="2" y="1" width="8" height="2" fill="#257179"/>
+      <rect x="2" y="3" width="1" height="5" fill="#257179"/><rect x="9" y="3" width="1" height="5" fill="#257179"/>
+      <rect x="3" y="3" width="6" height="5" fill="#ef7d57"/>
+      <rect x="4" y="5" width="1" height="1" fill="#333c57"/><rect x="7" y="5" width="1" height="1" fill="#333c57"/>
+      <rect x="4" y="7" width="4" height="1" fill="#b13e53"/>
+      <rect x="2" y="8" width="8" height="1" fill="#333c57"/>
+      <rect x="3" y="9" width="6" height="3" fill="#38b764"/>
+      <rect x="5" y="9" width="2" height="3" fill="#ffcd75"/>
+    </symbol>
+    <symbol id="icboard" viewBox="0 0 8 8">
+      <rect x="0" y="0" width="8" height="8" fill="none"/>
+      <rect x="0" y="0" width="8" height="1" fill="currentColor"/><rect x="0" y="7" width="8" height="1" fill="currentColor"/>
+      <rect x="0" y="1" width="1" height="6" fill="currentColor"/><rect x="7" y="1" width="1" height="6" fill="currentColor"/>
+      <rect x="2" y="2" width="4" height="1" fill="currentColor"/><rect x="2" y="4" width="4" height="1" fill="currentColor"/>
+    </symbol>
+    <symbol id="icchest" viewBox="0 0 8 8">
+      <rect x="0" y="1" width="8" height="3" fill="currentColor"/>
+      <rect x="0" y="5" width="8" height="2" fill="currentColor"/>
+      <rect x="3" y="3" width="2" height="3" fill="currentColor"/>
+    </symbol>
+    <symbol id="icshop" viewBox="0 0 8 8">
+      <rect x="2" y="0" width="4" height="1" fill="currentColor"/>
+      <rect x="1" y="1" width="1" height="1" fill="currentColor"/><rect x="6" y="1" width="1" height="1" fill="currentColor"/>
+      <rect x="0" y="2" width="8" height="6" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="pagehead">
+  <h1>QUESTVAULT</h1>
+  <p>UI north star — pixel-art mockup · Quest Board / Vault / Loot Shop · see docs/08-design-direction.md</p>
+</div>
+
+<div class="phones">
+
+  <!-- ============ SCREEN 1: QUEST BOARD ============ -->
+  <div class="phone">
+    <div class="screenlabel">SCREEN 1</div>
+    <div class="hud">
+      <svg width="36" height="36"><use href="#hero"/></svg>
+      <div class="who">
+        <div class="name">LIPI <span class="lv">LV 12</span></div>
+        <div class="bar"><i style="width:62%"></i></div>
+      </div>
+      <div class="pouch"><svg width="16" height="16"><use href="#coin"/></svg><b>23</b></div>
+    </div>
+
+    <div class="title">QUEST BOARD</div>
+    <div class="streak"><svg width="16" height="20"><use href="#flame"/></svg> 12-day streak &nbsp;·&nbsp; +10% loot</div>
+
+    <div class="card done">
+      <div class="chk"></div>
+      <div class="q">
+        <div class="qt">Run 2 km</div>
+        <div class="qr"><span class="xp">+15 XP</span> &nbsp; <span class="gp">+R$2 unlocked</span> &nbsp;· verified by Strava</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chk"></div>
+      <div class="q">
+        <div class="qt">Read 20 pages</div>
+        <div class="qr"><span class="xp">+10 XP</span> &nbsp; <span class="gp">+R$1,50</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chk"></div>
+      <div class="q">
+        <div class="qt">No sugar today</div>
+        <div class="qr"><span class="xp">+10 XP</span> &nbsp; <span class="gp">+R$1</span></div>
+      </div>
+    </div>
+    <div class="card boss">
+      <div class="bosstag">BOSS</div>
+      <div class="q">
+        <div class="qt">Sunday: run 10 km</div>
+        <div class="qr"><span class="xp">+120 XP</span> &nbsp; <span class="gp">unlocks R$25</span> &nbsp;· 3 days left</div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <div class="on"><svg width="14" height="14" style="color:#ffcd75"><use href="#icboard"/></svg>BOARD</div>
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icchest"/></svg>VAULT</div>
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icshop"/></svg>SHOP</div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 2: VAULT ============ -->
+  <div class="phone">
+    <div class="screenlabel">SCREEN 2</div>
+    <div class="hud">
+      <svg width="36" height="36"><use href="#hero"/></svg>
+      <div class="who">
+        <div class="name">LIPI <span class="lv">LV 12</span></div>
+        <div class="bar"><i style="width:62%"></i></div>
+      </div>
+      <div class="pouch"><svg width="16" height="16"><use href="#coin"/></svg><b>23</b></div>
+    </div>
+
+    <div class="title">THE VAULT</div>
+    <div class="vaultbox">
+      <svg width="128" height="112"><use href="#chest"/></svg>
+      <div class="balancelabel">SEALED — UNLOCK BY QUESTING</div>
+      <div class="balance">R$ 127,00</div>
+      <div class="balancelabel">GOLD POUCH — READY TO SPEND</div>
+      <div class="balance small">R$ 23,00</div>
+    </div>
+
+    <div class="btn green">+ STASH GOLD (PIX)</div>
+
+    <div class="ledger">
+      <h4>LEDGER — EVERY COIN, TRACEABLE</h4>
+      <div class="lrow"><span class="desc">Quest: Ran 2 km (Strava)</span><span class="amt conv">R$ 2,00 unlocked</span></div>
+      <div class="lrow"><span class="desc">Level 12 bonus</span><span class="amt conv">R$ 1,27 unlocked</span></div>
+      <div class="lrow"><span class="desc">Pix deposit</span><span class="amt in">+ R$ 50,00</span></div>
+      <div class="lrow"><span class="desc">Loot claimed: Pizza night</span><span class="amt out">− R$ 54,90</span></div>
+    </div>
+
+    <div class="escape">Need your gold back? <a href="#">Leave the dungeon</a> — always 100%, always free.</div>
+
+    <div class="nav">
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icboard"/></svg>BOARD</div>
+      <div class="on"><svg width="14" height="14" style="color:#ffcd75"><use href="#icchest"/></svg>VAULT</div>
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icshop"/></svg>SHOP</div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 3: LOOT SHOP ============ -->
+  <div class="phone">
+    <div class="screenlabel">SCREEN 3</div>
+    <div class="hud">
+      <svg width="36" height="36"><use href="#hero"/></svg>
+      <div class="who">
+        <div class="name">LIPI <span class="lv">LV 12</span></div>
+        <div class="bar"><i style="width:62%"></i></div>
+      </div>
+      <div class="pouch"><svg width="16" height="16"><use href="#coin"/></svg><b>23</b></div>
+    </div>
+
+    <div class="title">LOOT SHOP</div>
+
+    <div class="item ready">
+      <div class="row1"><span class="it">Pizza night (iFood)</span><span class="price">R$ 21,90</span></div>
+      <div class="hint">Pouch covers it — you earned this one.</div>
+      <div class="bar goldbar"><i style="width:100%"></i></div>
+      <div class="btn gold claim">CLAIM LOOT</div>
+    </div>
+
+    <div class="item">
+      <div class="row1"><span class="it">Headset gamer</span><span class="price">R$ 180,00</span></div>
+      <div class="hint">R$ 23 / R$ 180 — about 78 km of running to go</div>
+      <div class="bar goldbar"><i style="width:13%"></i></div>
+    </div>
+
+    <div class="item">
+      <div class="row1"><span class="it">PS5 (one day…)</span><span class="price">R$ 3.499,00</span></div>
+      <div class="hint">R$ 23 / R$ 3.499 — a true boss fight</div>
+      <div class="bar goldbar"><i style="width:1.5%"></i></div>
+    </div>
+
+    <div class="btn ghost">+ ADD TO WISHLIST (TITLE + LINK)</div>
+
+    <div class="nav">
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icboard"/></svg>BOARD</div>
+      <div><svg width="14" height="14" style="color:#566c86"><use href="#icchest"/></svg>VAULT</div>
+      <div class="on"><svg width="14" height="14" style="color:#ffcd75"><use href="#icshop"/></svg>SHOP</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="palette">
+  <i style="background:#1a1c2c"></i><i style="background:#5d275d"></i><i style="background:#b13e53"></i>
+  <i style="background:#ef7d57"></i><i style="background:#ffcd75"></i><i style="background:#a7f070"></i>
+  <i style="background:#38b764"></i><i style="background:#257179"></i><i style="background:#29366f"></i>
+  <i style="background:#3b5dc9"></i><i style="background:#41a6f6"></i><i style="background:#73eff7"></i>
+  <i style="background:#f4f4f4"></i><i style="background:#94b0c2"></i><i style="background:#566c86"></i>
+  <i style="background:#333c57"></i>
+</div>
+<div class="foot">Sweetie 16 palette · Press Start 2P + VT323 · amounts in clean sans where money moves (rule D2.1)</div>
+
+</body>
+</html>
