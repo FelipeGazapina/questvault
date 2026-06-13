@@ -1,2 +1,2 @@
-// Default — overwritten by Netlify build when QV_WEB_APP_URL is set
-window.QV_WEB_APP_URL = "/app/";
+// Production default — Netlify build overwrites via scripts/netlify-build.mjs
+window.QV_WEB_APP_URL = "https://questvault-production.up.railway.app/";
