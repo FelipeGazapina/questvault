@@ -3,6 +3,6 @@
 export const FEATURES = {
   /** Vault, balances, conversions, claim/redeem — Phase 2 + BaaS only. */
   vault: false,
-  /** Floating re-summon button on the quest board (testing). */
-  debugResummon: true,
+  /** Floating re-summon button on the quest board (dev / local only). */
+  debugResummon: __DEV__,
 } as const;
