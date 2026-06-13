@@ -62,7 +62,7 @@ const STRINGS = {
     "dl.lead":
       "Enquanto aguardamos aprovação na App Store e Google Play, instale pelo navegador (PWA) ou baixe o APK Android.",
     "dl.pwa": "INSTALAR WEB APP",
-    "dl.pwa.sub": "Funciona no Chrome, Edge e Android · adiciona à tela inicial",
+    "dl.pwa.sub": "Abre o app · depois use Instalar no menu do navegador",
     "dl.pwa.missing": "Web app ainda não publicada. Rode: node website/scripts/build-pwa.mjs",
     "dl.pwa.open": "ABRIR WEB APP",
     "dl.android": "BAIXAR APK ANDROID",
@@ -138,7 +138,7 @@ const STRINGS = {
     "dl.lead":
       "While we wait for App Store and Google Play approval, install via browser (PWA) or download the Android APK.",
     "dl.pwa": "INSTALL WEB APP",
-    "dl.pwa.sub": "Works in Chrome, Edge & Android · adds to home screen",
+    "dl.pwa.sub": "Opens the live app · then use Install in your browser",
     "dl.pwa.missing": "Web app not published yet. Run: node website/scripts/build-pwa.mjs",
     "dl.pwa.open": "OPEN WEB APP",
     "dl.android": "DOWNLOAD ANDROID APK",

@@ -27,6 +27,7 @@ export function PwaInstallPrompt() {
   const [dismissed, setDismissed] = useState(false);
   const [installed, setInstalled] = useState(false);
   const [showIosHint, setShowIosHint] = useState(false);
+  const [showManualHint, setShowManualHint] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -36,14 +37,21 @@ export function PwaInstallPrompt() {
     }
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get("install") === "1" && isIosSafari()) {
+    const wantsInstall = params.get("install") === "1";
+
+    if (wantsInstall && isIosSafari()) {
       setShowIosHint(true);
+    }
+
+    if (wantsInstall && !isIosSafari()) {
+      setShowManualHint(true);
     }
 
     const onBip = (e: Event) => {
       e.preventDefault();
       setDeferred(e as BeforeInstallPromptEvent);
-      if (params.get("install") === "1") {
+      setShowManualHint(false);
+      if (wantsInstall) {
         setShowIosHint(false);
       }
     };
@@ -52,6 +60,7 @@ export function PwaInstallPrompt() {
       setInstalled(true);
       setDeferred(null);
       setShowIosHint(false);
+      setShowManualHint(false);
     };
 
     window.addEventListener("beforeinstallprompt", onBip);
@@ -68,10 +77,11 @@ export function PwaInstallPrompt() {
     const { outcome } = await deferred.userChoice;
     if (outcome === "accepted") setInstalled(true);
     setDeferred(null);
+    setShowManualHint(false);
   }
 
   if (installed || dismissed) return null;
-  if (!deferred && !showIosHint) return null;
+  if (!deferred && !showIosHint && !showManualHint) return null;
 
   return (
     <View style={styles.wrap} accessibilityRole="alert">
@@ -80,6 +90,11 @@ export function PwaInstallPrompt() {
         {showIosHint && !deferred ? (
           <Text style={styles.body}>
             Tap Share, then &quot;Add to Home Screen&quot; to install the app on iOS.
+          </Text>
+        ) : showManualHint && !deferred ? (
+          <Text style={styles.body}>
+            Use the browser menu (⋮ or ⋯) and choose &quot;Install app&quot; or &quot;Add to Home
+            screen&quot;.
           </Text>
         ) : (
           <Text style={styles.body}>Add QuestVault to your home screen — play like a native app.</Text>

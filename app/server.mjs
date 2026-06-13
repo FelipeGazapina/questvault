@@ -31,19 +31,27 @@ function send(res, status, body, type = "text/plain") {
   res.end(body);
 }
 
+const STATIC_EXT = /\.(json|js|webmanifest|png|ico|svg|woff2|txt|css|map)$/i;
+
 function resolvePath(urlPath) {
   const safe = urlPath.split("?")[0].replace(/\.\./g, "");
-  let file = join(dist, safe === "/" ? "index.html" : safe);
+  const rel = safe === "/" ? "index.html" : safe.replace(/^\//, "");
+  const file = join(dist, rel);
   if (existsSync(file) && statSync(file).isFile()) return file;
   if (!extname(safe) && existsSync(`${file}.html`)) return `${file}.html`;
   const indexInDir = join(file, "index.html");
   if (existsSync(indexInDir)) return indexInDir;
+  if (STATIC_EXT.test(safe)) return null;
   return join(dist, "index.html");
 }
 
 createServer((req, res) => {
   try {
     const file = resolvePath(req.url ?? "/");
+    if (!file) {
+      send(res, 404, "Not found");
+      return;
+    }
     const ext = extname(file);
     const data = readFileSync(file);
     send(res, 200, data, MIME[ext] ?? "application/octet-stream");

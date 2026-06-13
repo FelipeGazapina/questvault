@@ -24,7 +24,9 @@ console.log("\nExporting Expo web → website/app/ …\n");
 execSync(`"${node}" "${npx}" expo export --platform web --output-dir "${outDir}"`, {
   cwd: appDir,
   stdio: "inherit",
-  env: { ...process.env },
+  env: { ...process.env, EXPO_BASE_URL: "/app" },
 });
+
+execSync(`"${node}" scripts/pwa-postbuild.mjs`, { cwd: appDir, stdio: "inherit" });
 
 console.log("\nDone. Serve website/ and open /app/ to install the PWA.\n");
