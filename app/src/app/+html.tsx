@@ -28,6 +28,11 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/icons/icon-192.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: "html,body{height:100%;background-color:#1a1c2c}#root{display:flex;height:100%}",
+          }}
+        />
         <ScrollViewStyleReset />
         <script dangerouslySetInnerHTML={{ __html: SW_REGISTER }} />
       </head>

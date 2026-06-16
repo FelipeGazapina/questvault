@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { initStoredLanguage } from "@/i18n";
 import { AuthScreen } from "@/components/auth-screen";
@@ -39,44 +40,34 @@ function Splash() {
   return <View style={{ flex: 1, backgroundColor: C.night }} />;
 }
 
-export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ PressStart2P_400Regular, VT323_400Regular });
+const TAB_BAR_HEIGHT = 64;
+const TAB_LABEL_SIZE = 7;
+
+function GameTabs() {
   const { t } = useTranslation();
-  useEffect(() => {
-    initStoredLanguage();
-  }, []);
-  if (!fontsLoaded) return <Splash />;
+  const insets = useSafeAreaInsets();
 
   return (
-    <ConvexAuthProvider
-      client={convex}
-      storage={Platform.OS === "web" ? undefined : secureStorage}
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        sceneStyle: { backgroundColor: C.night },
+        tabBarStyle: {
+          backgroundColor: C.panelDark,
+          borderTopWidth: 3,
+          borderTopColor: C.ink,
+          height: TAB_BAR_HEIGHT + insets.bottom,
+          paddingBottom: insets.bottom,
+        },
+        tabBarActiveTintColor: C.gold,
+        tabBarInactiveTintColor: C.slate,
+        tabBarLabelStyle: {
+          fontFamily: FONT.head,
+          fontSize: TAB_LABEL_SIZE,
+          lineHeight: TAB_LABEL_SIZE * 1.7,
+        },
+      }}
     >
-      <StatusBar style="light" />
-      <PwaInstallPrompt />
-      <AuthLoading>
-        <Splash />
-      </AuthLoading>
-      <Unauthenticated>
-        <AuthScreen />
-      </Unauthenticated>
-      <Authenticated>
-        <UserProvider>
-          <Tabs
-            screenOptions={{
-              headerShown: false,
-              sceneStyle: { backgroundColor: C.night },
-              tabBarStyle: {
-                backgroundColor: C.panelDark,
-                borderTopWidth: 3,
-                borderTopColor: C.ink,
-                height: 64,
-              },
-              tabBarActiveTintColor: C.gold,
-              tabBarInactiveTintColor: C.slate,
-              tabBarLabelStyle: { fontFamily: FONT.head, fontSize: 7 },
-            }}
-          >
             <Tabs.Screen
               name="index"
               options={{
@@ -134,6 +125,32 @@ export default function RootLayout() {
               }}
             />
           </Tabs>
+  );
+}
+
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({ PressStart2P_400Regular, VT323_400Regular });
+  useEffect(() => {
+    initStoredLanguage();
+  }, []);
+  if (!fontsLoaded) return <Splash />;
+
+  return (
+    <ConvexAuthProvider
+      client={convex}
+      storage={Platform.OS === "web" ? undefined : secureStorage}
+    >
+      <StatusBar style="light" />
+      <PwaInstallPrompt />
+      <AuthLoading>
+        <Splash />
+      </AuthLoading>
+      <Unauthenticated>
+        <AuthScreen />
+      </Unauthenticated>
+      <Authenticated>
+        <UserProvider>
+          <GameTabs />
         </UserProvider>
       </Authenticated>
     </ConvexAuthProvider>
