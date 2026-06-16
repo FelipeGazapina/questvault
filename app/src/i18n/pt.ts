@@ -126,5 +126,9 @@ export const pt = {
     cosmetics: "COSMÉTICOS — CHEGANDO COM NÍVEIS",
     language: "LANGUAGE / IDIOMA",
     signOut: "Sair",
+    pushHeader: "LEMBRETES DE QUEST",
+    pushOn: "PUSH ATIVO",
+    pushOff: "ATIVAR PUSH",
+    pushDesc: "Aviso quando novas dailies, side quests ou boss forem invocadas.",
   },
 } as const;

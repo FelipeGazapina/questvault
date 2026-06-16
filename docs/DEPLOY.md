@@ -20,6 +20,28 @@ npx convex login
 npx convex dev   # creates deployment, writes .env.local
 ```
 
+**Required for sign-up / sign-in:** Convex Auth needs JWT keys on the deployment. Without them, registration fails with a generic connection error.
+
+```powershell
+# After login, with .env.local pointing at your cloud deployment (not anonymous:):
+npm run setup:auth-keys
+# Or interactively:
+npx @convex-dev/auth --web-server-url https://YOUR-RAILWAY-URL.up.railway.app
+```
+
+Verify in [Convex Dashboard](https://dashboard.convex.dev) → **Settings** → **Environment Variables**: `JWT_PRIVATE_KEY` and `JWKS` must be set.
+
+**PWA push notifications (Web Push, no Firebase/OneSignal):** uses VAPID keys on Convex + public key on Railway.
+
+```powershell
+npm run setup:vapid-keys
+# Copy EXPO_PUBLIC_VAPID_PUBLIC_KEY to Railway and redeploy.
+```
+
+Convex env: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`. Railway: `EXPO_PUBLIC_VAPID_PUBLIC_KEY` (same as public key).
+
+Users enable reminders on the **HERO** tab in the installed PWA. Cron runs hourly to spawn new-period quests and notify subscribers.
+
 From [Convex Dashboard](https://dashboard.convex.dev) → your project → **Settings** → **Deploy Key** → create key for Railway CI.
 
 Note:
@@ -102,6 +124,7 @@ npx serve .
 | Issue | Fix |
 |-------|-----|
 | Web app blank / 404 assets | Check `EXPO_BASE_URL=/` on Railway |
+| Convex auth fails / "could not forge hero" | Run `npm run setup:auth-keys` (missing `JWT_PRIVATE_KEY` / `JWKS` on Convex) |
 | Convex auth fails | `EXPO_PUBLIC_CONVEX_URL` must match deployed Convex deployment |
 | PWA install missing | Railway must serve HTTPS (default on Railway) |
 | APK button disabled | Add `website/downloads/questvault.apk` |

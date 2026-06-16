@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
 import { BodyText, PixelButton, PixelPanel, PixelText, SegBar } from "@/components/pixel";
+import { PushNotificationsToggle } from "@/components/push-notifications-toggle";
 import { SUPPORTED_LANGUAGES, setLanguage } from "@/i18n";
 import { FEATURES } from "@/lib/features";
 import { C, FONT } from "@/lib/palette";
@@ -143,6 +144,10 @@ export default function Hero() {
               );
             })}
           </View>
+        </PixelPanel>
+
+        <PixelPanel background={C.panelDark}>
+          <PushNotificationsToggle />
         </PixelPanel>
 
         <PixelPanel background={C.panelDark}>

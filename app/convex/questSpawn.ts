@@ -29,13 +29,13 @@ async function expireStaleOpens(
   }
 }
 
-/** Summon instances for one type and period. Skips if already dealt unless `force`. */
+/** Summon instances for one type and period. Skips if already dealt unless `force`. Returns count spawned. */
 export async function spawnForType(
   ctx: MutationCtx,
   userId: Id<"users">,
   questType: QuestType,
   options?: { force?: boolean },
-) {
+): Promise<number> {
   const periodKey = periodKeyFor(questType);
 
   const periodInstances = await ctx.db
@@ -45,7 +45,7 @@ export async function spawnForType(
     )
     .collect();
 
-  if (!options?.force && periodInstances.length > 0) return;
+  if (!options?.force && periodInstances.length > 0) return 0;
 
   if (options?.force) {
     for (const inst of periodInstances) {
@@ -78,6 +78,8 @@ export async function spawnForType(
       spawnedAt: now,
     });
   }
+
+  return toSpawn.length;
 }
 
 /** Mark stale open instances incomplete, then summon this period's hand if not yet dealt. */

@@ -126,5 +126,9 @@ export const en = {
     cosmetics: "COSMETICS — COMING WITH LEVELS",
     language: "LANGUAGE / IDIOMA",
     signOut: "Sign out",
+    pushHeader: "QUEST REMINDERS",
+    pushOn: "PUSH ON",
+    pushOff: "ENABLE PUSH",
+    pushDesc: "Get notified when new daily, side, or boss quests are summoned.",
   },
 } as const;

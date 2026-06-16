@@ -76,4 +76,24 @@ export default defineSchema({
     amountCents: v.number(),
     description: v.string(),
   }).index("by_user", ["userId"]),
+
+  /** Web Push subscription (PWA) — one row per browser endpoint. */
+  pushSubscriptions: defineTable({
+    userId: v.id("users"),
+    endpoint: v.string(),
+    p256dh: v.string(),
+    auth: v.string(),
+    locale: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_endpoint", ["endpoint"]),
+
+  /** Dedup: one push per user / quest type / period. */
+  pushPeriodDispatches: defineTable({
+    userId: v.id("users"),
+    questType: questType,
+    periodKey: v.string(),
+    sentAt: v.number(),
+  }).index("by_user_type_period", ["userId", "questType", "periodKey"]),
 });

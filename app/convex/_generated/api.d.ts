@@ -9,9 +9,13 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as game from "../game.js";
 import type * as http from "../http.js";
 import type * as lootIcons from "../lootIcons.js";
+import type * as push from "../push.js";
+import type * as pushActions from "../pushActions.js";
+import type * as pushMessages from "../pushMessages.js";
 import type * as questSpawn from "../questSpawn.js";
 import type * as quests from "../quests.js";
 import type * as shop from "../shop.js";
@@ -26,9 +30,13 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  crons: typeof crons;
   game: typeof game;
   http: typeof http;
   lootIcons: typeof lootIcons;
+  push: typeof push;
+  pushActions: typeof pushActions;
+  pushMessages: typeof pushMessages;
   questSpawn: typeof questSpawn;
   quests: typeof quests;
   shop: typeof shop;
