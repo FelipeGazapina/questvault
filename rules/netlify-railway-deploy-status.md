@@ -13,7 +13,9 @@
 
 - Netlify base directory: `website`
 - `QV_WEB_APP_URL` in `website/netlify.toml` → Railway URL (build injects `config.js`)
-- Railway root: `app`, Dockerfile `Dockerfile.railway`
+- Railway project `questvault` / service `questvault`: root `/app`, Dockerfile `Dockerfile.railway`, deploys from `main`
+- Convex backend: pushed by the **Convex deploy** GitHub workflow (secret `CONVEX_DEPLOY_KEY`)
+- Android APK: **Android APK** GitHub workflow → `android-latest` release
 - Convex deployment: `dev:doting-wren-467`
 
 ## Verify after deploy

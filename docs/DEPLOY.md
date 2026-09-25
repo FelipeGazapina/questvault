@@ -40,7 +40,7 @@ npm run setup:vapid-keys
 
 Convex env: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`. Railway: `EXPO_PUBLIC_VAPID_PUBLIC_KEY` (same as public key).
 
-Users enable reminders on the **HERO** tab in the installed PWA. Cron runs hourly to spawn new-period quests and notify subscribers.
+Users enable reminders on the **HERO** tab in the installed PWA. A cron runs every 5 minutes (`tick.run`) to spawn missions, warn about deadlines, send reminders and the daily summary.
 
 From [Convex Dashboard](https://dashboard.convex.dev) → your project → **Settings** → **Deploy Key** → create key for Railway CI.
 
@@ -51,7 +51,13 @@ Note:
 
 ---
 
-## 2. Railway (web app + Convex deploy)
+### Convex deploy from GitHub
+
+The **Convex deploy** workflow (`.github/workflows/convex-deploy.yml`) runs on every push to `main` that touches `app/convex/` and pushes schema, functions and crons. It needs the repository secret `CONVEX_DEPLOY_KEY` (GitHub → Settings → Secrets and variables → Actions). A `dev:` key is pushed with `convex dev --once`, a `prod:` key with `convex deploy`. It can also be run by hand (**Actions → Convex deploy → Run workflow**).
+
+---
+
+## 2. Railway (web app)
 
 1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**
 2. Set **Root Directory** → `app`
@@ -61,8 +67,7 @@ Note:
 | Variable | Value |
 |----------|--------|
 | `EXPO_PUBLIC_CONVEX_URL` | `https://YOUR.deployment.convex.cloud` |
-| `CONVEX_DEPLOY_KEY` | from Convex dashboard |
-| `CONVEX_DEPLOYMENT` | your deployment slug |
+| `CONVEX_DEPLOY_KEY` | optional — the GitHub workflow already deploys Convex |
 | `EXPO_BASE_URL` | `/` |
 | `PORT` | `8080` (Railway sets automatically) |
 
