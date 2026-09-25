@@ -31,6 +31,15 @@ npx @convex-dev/auth --web-server-url https://YOUR-RAILWAY-URL.up.railway.app
 
 Verify in [Convex Dashboard](https://dashboard.convex.dev) → **Settings** → **Environment Variables**: `JWT_PRIVATE_KEY` and `JWKS` must be set.
 
+**Password reset ("Esqueci minha senha"):** the guardian gets an 8-digit code by email, sent through [Resend](https://resend.com).
+
+| Convex env | Value |
+|------------|-------|
+| `AUTH_RESEND_KEY` | Resend API key |
+| `AUTH_EMAIL_FROM` | Sender, e.g. `QuestVault <no-reply@yourdomain.com>` (the domain must be verified in Resend). Without it, `onboarding@resend.dev` is used, which only delivers to the Resend account owner. |
+
+Without `AUTH_RESEND_KEY` the app shows "we couldn't send the email" on the reset screen; sign-in keeps working.
+
 **PWA push notifications (Web Push, no Firebase/OneSignal):** uses VAPID keys on Convex + public key on Railway.
 
 ```powershell

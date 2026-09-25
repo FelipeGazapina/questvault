@@ -54,7 +54,7 @@
     "build:web": "expo export --platform web --output-dir dist && node scripts/pwa-postbuild.mjs",
     "setup:auth-keys": "node scripts/setup-convex-auth-keys.mjs",
     "setup:vapid-keys": "node scripts/setup-vapid-keys.mjs",
-    "test": "node --experimental-strip-types --test convex/pushMessages.test.mjs convex/rules.test.mjs",
+    "test": "node --experimental-strip-types --test convex/pushMessages.test.mjs convex/rules.test.mjs convex/resetEmail.test.mjs",
     "start:web": "node server.mjs",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
