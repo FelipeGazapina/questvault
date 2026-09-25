@@ -3,11 +3,7 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-/** Check for new daily / weekly / monthly quest hands and notify PWA subscribers. */
-crons.hourly(
-  "period quest push notifications",
-  { minuteUTC: 5 },
-  internal.push.runPeriodPushCron,
-);
+/** Spawn missions at their appear time, deadline warnings, delivery reminders, daily summary. */
+crons.interval("family mission tick", { minutes: 5 }, internal.tick.run);
 
 export default crons;

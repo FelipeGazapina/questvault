@@ -13,7 +13,12 @@ ARG CONVEX_DEPLOY_KEY
 ARG CONVEX_DEPLOYMENT
 ENV CONVEX_DEPLOY_KEY=$CONVEX_DEPLOY_KEY
 ENV CONVEX_DEPLOYMENT=$CONVEX_DEPLOYMENT
-RUN if [ -n "$CONVEX_DEPLOY_KEY" ]; then npx convex deploy; fi
+# Optional: the "Convex deploy" GitHub workflow already pushes the backend on merge.
+RUN case "$CONVEX_DEPLOY_KEY" in \
+      "") ;; \
+      dev:*) npx convex dev --once ;; \
+      *) npx convex deploy ;; \
+    esac
 
 # ── Static web export (served at / on Railway) ──
 ARG EXPO_PUBLIC_CONVEX_URL

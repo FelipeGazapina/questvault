@@ -1,4 +1,4 @@
-/* QuestVault PWA — installability + Web Push (no third-party SDK) */
+/* QuestVault PWA — installability + Web Push for the family flow (no third-party SDK) */
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
 });
@@ -12,7 +12,7 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  let data = { title: "QuestVault", body: "New quests await!", url: "/" };
+  let data = { title: "QuestVault", body: "", url: "/", tag: "questvault" };
   try {
     if (event.data) {
       data = { ...data, ...event.data.json() };
@@ -27,7 +27,8 @@ self.addEventListener("push", (event) => {
       icon: "/icons/icon-192.png",
       badge: "/icons/icon-192.png",
       data: { url: data.url ?? "/" },
-      tag: "questvault-period",
+      // One notification per mission run: a newer update (approved after a reminder) replaces the older one.
+      tag: data.tag ?? "questvault",
       renotify: true,
     }),
   );

@@ -1,24 +1,30 @@
 import "@/i18n";
 
+import {
+  AlegreyaSans_400Regular,
+  AlegreyaSans_400Regular_Italic,
+  AlegreyaSans_500Medium,
+  AlegreyaSans_700Bold,
+  AlegreyaSans_800ExtraBold,
+} from "@expo-google-fonts/alegreya-sans";
+import { Cinzel_600SemiBold, Cinzel_700Bold, useFonts } from "@expo-google-fonts/cinzel";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { PressStart2P_400Regular, useFonts } from "@expo-google-fonts/press-start-2p";
-import { VT323_400Regular } from "@expo-google-fonts/vt323";
-import { Authenticated, AuthLoading, ConvexReactClient, Unauthenticated } from "convex/react";
-import { Image } from "expo-image";
-import { Tabs } from "expo-router";
+import { Authenticated, AuthLoading, ConvexReactClient, Unauthenticated, useQuery } from "convex/react";
+import { Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { Platform, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform } from "react-native";
 
-import { initStoredLanguage } from "@/i18n";
-import { AuthScreen } from "@/components/auth-screen";
+import { AuthScreen } from "@/components/access/auth-screen";
+import { OnboardingScreen } from "@/components/access/onboarding-screen";
+import { PairScreen } from "@/components/access/pair-screen";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
-import { FEATURES } from "@/lib/features";
-import { C, FONT } from "@/lib/palette";
-import { UserProvider } from "@/lib/user-context";
+import { Loading } from "@/components/ui";
+import { initStoredLanguage } from "@/i18n";
+import { ProfileProvider } from "@/lib/family";
+import { T } from "@/lib/theme";
+import { api } from "../../convex/_generated/api";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
@@ -30,128 +36,45 @@ const secureStorage = {
   removeItem: SecureStore.deleteItemAsync,
 };
 
-function TabIcon({ source, active }: { source: number; active: boolean }) {
+/** Signed in: create a family (guardian), pair a phone (child), or enter the app. */
+function FamilyGate() {
+  const me = useQuery(api.family.me, {});
+  if (me === undefined) return <Loading />;
+  if (!me.family) return me.user.isAnonymous ? <PairScreen /> : <OnboardingScreen />;
   return (
-    <Image source={source} style={{ width: 22, height: 22, opacity: active ? 1 : 0.45 }} contentFit="contain" />
-  );
-}
-
-function Splash() {
-  return <View style={{ flex: 1, backgroundColor: C.night }} />;
-}
-
-const TAB_BAR_HEIGHT = 64;
-const TAB_LABEL_SIZE = 7;
-
-function GameTabs() {
-  const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
-
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        sceneStyle: { backgroundColor: C.night },
-        tabBarStyle: {
-          backgroundColor: C.panelDark,
-          borderTopWidth: 3,
-          borderTopColor: C.ink,
-          height: TAB_BAR_HEIGHT + insets.bottom,
-          paddingBottom: insets.bottom,
-        },
-        tabBarActiveTintColor: C.gold,
-        tabBarInactiveTintColor: C.slate,
-        tabBarLabelStyle: {
-          fontFamily: FONT.head,
-          fontSize: TAB_LABEL_SIZE,
-          lineHeight: TAB_LABEL_SIZE * 1.7,
-        },
-      }}
-    >
-            <Tabs.Screen
-              name="index"
-              options={{
-                title: t("tabs.board"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/flame.png")} active={focused} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="pool"
-              options={{
-                title: t("tabs.pool"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/hero-knight.png")} active={focused} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="vault"
-              options={{
-                // Phase 1: the vault is money-shaped, so it stays hidden (FEATURES.vault).
-                href: FEATURES.vault ? "/vault" : null,
-                title: t("tabs.vault"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/chest.png")} active={focused} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="shop"
-              options={{
-                title: t("tabs.shop"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/coin.png")} active={focused} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="stats"
-              options={{
-                title: t("tabs.log"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/chest-open.png")} active={focused} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="hero"
-              options={{
-                title: t("tabs.hero"),
-                tabBarIcon: ({ focused }) => (
-                  <TabIcon source={require("@/assets/sprites/hero.png")} active={focused} />
-                ),
-              }}
-            />
-          </Tabs>
+    <ProfileProvider>
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: T.bg } }} />
+    </ProfileProvider>
   );
 }
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ PressStart2P_400Regular, VT323_400Regular });
+  const [fontsLoaded] = useFonts({
+    Cinzel_600SemiBold,
+    Cinzel_700Bold,
+    AlegreyaSans_400Regular,
+    AlegreyaSans_400Regular_Italic,
+    AlegreyaSans_500Medium,
+    AlegreyaSans_700Bold,
+    AlegreyaSans_800ExtraBold,
+  });
   useEffect(() => {
     initStoredLanguage();
   }, []);
-  if (!fontsLoaded) return <Splash />;
+  if (!fontsLoaded) return <Loading />;
 
   return (
-    <ConvexAuthProvider
-      client={convex}
-      storage={Platform.OS === "web" ? undefined : secureStorage}
-    >
+    <ConvexAuthProvider client={convex} storage={Platform.OS === "web" ? undefined : secureStorage}>
       <StatusBar style="light" />
       <PwaInstallPrompt />
       <AuthLoading>
-        <Splash />
+        <Loading />
       </AuthLoading>
       <Unauthenticated>
         <AuthScreen />
       </Unauthenticated>
       <Authenticated>
-        <UserProvider>
-          <GameTabs />
-        </UserProvider>
+        <FamilyGate />
       </Authenticated>
     </ConvexAuthProvider>
   );

@@ -1,0 +1,47 @@
+# Pushes the Convex backend (schema, functions, crons) when app/convex changes on main.
+# Needs the CONVEX_DEPLOY_KEY repository secret (Convex dashboard → Settings → Deploy Key).
+name: Convex deploy
+
+on:
+  push:
+    branches: [main]
+    paths: ["app/convex/**", "app/package.json", "app/package-lock.json", ".github/workflows/convex-deploy.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: convex-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: app
+    env:
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Deploy functions
+        run: |
+          if [ -z "$CONVEX_DEPLOY_KEY" ]; then
+            echo "::error::Missing CONVEX_DEPLOY_KEY secret (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          # `convex deploy` targets prod/preview keys; a dev deployment key is pushed with `dev --once`.
+          case "$CONVEX_DEPLOY_KEY" in
+            dev:*) npx convex dev --once ;;
+            *) npx convex deploy ;;
+          esac

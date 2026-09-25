@@ -1,205 +1,147 @@
-import { useMutation, useQuery } from "convex/react";
-import { Image } from "expo-image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { Redirect, useRouter } from "expo-router";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Pressable, StyleSheet, View } from "react-native";
 
-import { Hud } from "@/components/hud";
-import { QuestRow } from "@/components/quest-row";
-import { BodyText, PixelPanel, PixelText } from "@/components/pixel";
-import { FEATURES } from "@/lib/features";
-import { BOARD_SECTIONS, sectionColor, typeLabelKey } from "@/lib/quest-types";
-import { brl, C } from "@/lib/palette";
-import { useUser } from "@/lib/user-context";
-import { api } from "../../convex/_generated/api";
+import { AccessLayout } from "@/components/access/access-layout";
+import { PinPrompt } from "@/components/access/pin-prompt";
+import { ProfileRow } from "@/components/access/profile-row";
+import { Icon } from "@/components/icons";
+import { Body, Button, Chip, Empty, Loading, Ornament } from "@/components/ui";
+import { CREST_SPRITE } from "@/lib/art";
+import { useProfile } from "@/lib/family";
+import { formatMinutes, T } from "@/lib/theme";
 import type { Id } from "../../convex/_generated/dataModel";
-import { SPAWN_SLOTS } from "../../convex/game";
 
-export default function QuestBoard() {
+/** Where to go after the guardian PIN check. */
+type GuardianTarget = "/guardiao" | "/guardiao/ajustes";
+
+/** "Quem está jogando?" — the shared-phone profile chooser. */
+export default function ProfileChooser() {
   const { t } = useTranslation();
-  const user = useUser();
-  const board = useQuery(api.quests.board, {});
-  const syncBoard = useMutation(api.quests.syncBoard);
-  const debugResummon = useMutation(api.quests.debugResummon);
-  const complete = useMutation(api.quests.complete);
+  const router = useRouter();
+  const { me, active, ready, enterGuardian, enterAdventurer } = useProfile();
+  const [pinFor, setPinFor] = useState<GuardianTarget | null>(null);
 
-  const [toast, setToast] = useState<string | null>(null);
-  const [completingId, setCompletingId] = useState<Id<"questInstances"> | null>(null);
-  const [exitingIds, setExitingIds] = useState<Set<Id<"questInstances">>>(() => new Set());
-  const [resummoning, setResummoning] = useState(false);
+  if (!ready || !me || !me.family) return <Loading />;
+  // A paired phone whose adventurer was removed has nowhere to go: offer to start over.
+  if (me.user.role === "adventurer" && !active) return <Unlinked />;
+  if (me.user.role === "adventurer" || (active && active !== "guardian")) return <Redirect href="/aventureiro" />;
+  if (active === "guardian") return <Redirect href="/guardiao" />;
 
-  useEffect(() => {
-    void syncBoard({});
-  }, [syncBoard]);
+  const hasPin = me.family.hasPin;
 
-  const visibleByType = useMemo(() => {
-    if (!board) return null;
-    return {
-      daily: board.daily.filter((q) => !exitingIds.has(q._id)),
-      side: board.side.filter((q) => !exitingIds.has(q._id)),
-      boss: board.boss.filter((q) => !exitingIds.has(q._id)),
-    };
-  }, [board, exitingIds]);
-
-  const totalVisible =
-    visibleByType === null
-      ? 0
-      : visibleByType.daily.length + visibleByType.side.length + visibleByType.boss.length;
-
-  const clearExiting = useCallback((instanceId: Id<"questInstances">) => {
-    setExitingIds((prev) => {
-      if (!prev.has(instanceId)) return prev;
-      const next = new Set(prev);
-      next.delete(instanceId);
-      return next;
-    });
-  }, []);
-
-  async function onComplete(instanceId: Id<"questInstances">) {
-    if (completingId) return;
-    setCompletingId(instanceId);
-    try {
-      const r = await complete({ instanceId });
-      const parts = [`+${r.xpGained} XP`];
-      if (FEATURES.vault && r.convertedCents > 0) {
-        parts.push(t("board.unlocked", { amount: brl(r.convertedCents) }));
-      }
-      if (r.leveledUpTo) parts.push(t("board.levelUp", { level: r.leveledUpTo }));
-      setToast(parts.join(" · "));
-      setTimeout(() => setToast(null), 3500);
-      setExitingIds((prev) => new Set(prev).add(instanceId));
-    } catch (e) {
-      Alert.alert(t("board.alertTitle"), e instanceof Error ? e.message : t("board.alertFailed"));
-    } finally {
-      setCompletingId(null);
-    }
-  }
-
-  async function onResummon() {
-    if (resummoning) return;
-    setResummoning(true);
-    setExitingIds(new Set());
-    try {
-      await debugResummon({});
-      setToast(t("board.resummonDone"));
-      setTimeout(() => setToast(null), 2500);
-    } catch (e) {
-      Alert.alert(t("board.alertTitle"), e instanceof Error ? e.message : t("board.alertFailed"));
-    } finally {
-      setResummoning(false);
-    }
-  }
+  const goGuardian = (target: GuardianTarget) => {
+    enterGuardian();
+    router.replace(target as never);
+  };
+  const askGuardian = (target: GuardianTarget) => (hasPin ? setPinFor(target) : goGuardian(target));
+  const playAs = (id: Id<"adventurers">) => {
+    enterAdventurer(id);
+    router.replace("/aventureiro");
+  };
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
-      <ScrollView contentContainerStyle={[styles.content, FEATURES.debugResummon && styles.contentWithFab]}>
-        <Hud />
-        <PixelText size={13} style={{ textAlign: "center", marginTop: 8 }}>
-          {t("board.title")}
-        </PixelText>
-        <View style={styles.streak}>
-          <Image
-            source={require("@/assets/sprites/flame.png")}
-            style={{ width: 14, height: 18 }}
-            contentFit="contain"
-          />
-          <BodyText size={20} color={C.ember}>
-            {user?.streak ? t("board.streak", { count: user.streak }) : t("board.startStreak")}
-          </BodyText>
-        </View>
+    <AccessLayout>
+      <Ornament title={t("access.chooser.title")} />
 
-        {toast && (
-          <PixelPanel borderColor={C.gold} background="#3a2f4a">
-            <PixelText size={9} color={C.gold} style={{ textAlign: "center" }}>
-              {toast}
-            </PixelText>
-          </PixelPanel>
-        )}
+      <View style={{ gap: 10 }}>
+        <ProfileRow
+          banner="bannerRed"
+          name={me.user.name || t("access.chooser.guardian")}
+          accessibilityLabel={t("access.chooser.enterAs", { name: me.user.name || t("access.chooser.guardian") })}
+          onPress={() => askGuardian("/guardiao")}
+          details={
+            <Body size={14} color={T.muted}>
+              {hasPin ? t("access.chooser.guardianPin") : t("access.chooser.guardian")}
+            </Body>
+          }
+        />
+        {pinFor ? (
+          <View style={styles.pinBox}>
+            <PinPrompt onSuccess={() => goGuardian(pinFor)} onCancel={() => setPinFor(null)} />
+          </View>
+        ) : null}
 
-        {board !== undefined && totalVisible === 0 && (
-          <BodyText size={18} color={C.slate} style={{ textAlign: "center" }}>
-            {board.poolCounts.daily + board.poolCounts.side + board.poolCounts.boss === 0
-              ? t("board.emptyPoolGoTab")
-              : t("board.emptyBoard")}
-          </BodyText>
-        )}
-
-        {visibleByType &&
-          BOARD_SECTIONS.map(({ type }) => {
-            const quests = visibleByType[type];
-            if (quests.length === 0) return null;
-            const color = sectionColor(type, C);
-            return (
-              <View key={type} style={styles.section}>
-                <View style={styles.sectionHeader}>
-                  <PixelText size={9} color={color}>
-                    {t(typeLabelKey(type))}
-                  </PixelText>
-                  <BodyText size={15} color={C.slate}>
-                    {t("board.sectionCount", { count: quests.length, max: SPAWN_SLOTS[type] })}
-                  </BodyText>
-                </View>
-                {quests.map((q) => (
-                  <QuestRow
-                    key={q._id}
-                    quest={q}
-                    exiting={exitingIds.has(q._id)}
-                    busy={completingId === q._id}
-                    onComplete={() => onComplete(q._id)}
-                    onExitComplete={() => clearExiting(q._id)}
-                  />
-                ))}
+        {me.adventurers.map((a) => (
+          <ProfileRow
+            key={a._id}
+            banner={CREST_SPRITE[a.crest]}
+            name={a.name}
+            accessibilityLabel={t("access.chooser.enterAs", { name: a.name })}
+            onPress={() => playAs(a._id)}
+            details={
+              <View style={{ flexDirection: "row", gap: 6, flexWrap: "wrap" }}>
+                <Chip kind="coin" label={String(a.coins)} />
+                <Chip kind="time" label={formatMinutes(a.timeBankMin)} />
               </View>
-            );
-          })}
+            }
+            trailing={
+              <Body size={13} color={T.muted}>
+                {t("access.chooser.level", { level: a.level })}
+              </Body>
+            }
+          />
+        ))}
 
-      </ScrollView>
-
-      {FEATURES.debugResummon && (
         <Pressable
-          style={[styles.fab, resummoning && styles.fabBusy]}
-          onPress={() => void onResummon()}
-          disabled={resummoning}
-          accessibilityLabel={t("board.debugResummon")}
+          accessibilityRole="button"
+          onPress={() => askGuardian("/guardiao/ajustes")}
+          style={({ pressed }) => [styles.add, pressed && { opacity: 0.8 }]}
         >
-          <PixelText size={7} color={C.night} style={{ textAlign: "center" }}>
-            {resummoning ? "..." : t("board.debugResummon")}
-          </PixelText>
+          <Icon name="plus" color={T.brass} />
+          <Body weight="bold" size={15} color={T.brass}>
+            {t("access.chooser.add")}
+          </Body>
         </Pressable>
-      )}
-    </SafeAreaView>
+      </View>
+
+      <View style={styles.footer}>
+        <View style={styles.footerTitle}>
+          <Icon name="phone" color={T.brassHi} />
+          <Body weight="bold" size={15} color={T.brassHi}>
+            {t("access.chooser.pairTitle")}
+          </Body>
+        </View>
+        <Body size={13} center color={T.faint}>
+          {t("access.chooser.pairHint")}
+        </Body>
+      </View>
+    </AccessLayout>
+  );
+}
+
+function Unlinked() {
+  const { t } = useTranslation();
+  const { signOut } = useAuthActions();
+  return (
+    <AccessLayout>
+      <Empty sprite="padlock" text={t("access.chooser.unlinked")} />
+      <Button label={t("access.pair.startOver")} onPress={() => void signOut()} />
+    </AccessLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: C.night },
-  content: { padding: 16, gap: 12 },
-  contentWithFab: { paddingBottom: 88 },
-  streak: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 8 },
-  section: { gap: 10 },
-  sectionHeader: {
+  pinBox: {
+    padding: 14,
+    backgroundColor: T.card,
+    borderWidth: 1,
+    borderColor: T.lineSoft,
+    borderRadius: 6,
+  },
+  add: {
+    minHeight: 56,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 2,
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: T.line,
+    borderRadius: 6,
   },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 80,
-    backgroundColor: C.gold,
-    borderWidth: 3,
-    borderColor: C.ink,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    minWidth: 72,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
-  },
-  fabBusy: { opacity: 0.6 },
+  footer: { alignItems: "center", gap: 4, paddingHorizontal: 8 },
+  footerTitle: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 32 },
 });

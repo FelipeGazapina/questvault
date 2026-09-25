@@ -1,26 +1,26 @@
 # Downloads
 
-Place the Android release APK here:
+The Android APK is published by the **Android APK** GitHub workflow
+(`.github/workflows/android-apk.yml`) to the `android-latest` release:
 
 ```
-website/downloads/questvault.apk
+https://github.com/FelipeGazapina/questvault/releases/download/android-latest/questvault.apk
 ```
 
-The landing page checks for this file and enables the **BAIXAR PARA ANDROID** button automatically.
+The Netlify build (`scripts/netlify-build.mjs`) writes that URL to `config.js` when it answers,
+and the landing page enables the **Baixar APK** button.
 
-## Build the APK (Expo)
+## Local fallback
 
-From the `app/` folder, after configuring EAS or a local release build:
+If `QV_APK_URL` is empty, the page looks for `website/downloads/questvault.apk` instead.
+To build one by hand:
 
 ```powershell
 cd app
-npx expo prebuild --platform android   # if needed
-# then your release pipeline, e.g. EAS:
-# eas build --platform android --profile preview
+npx expo prebuild --platform android --no-install
+cd android
+./gradlew assembleRelease
 ```
 
-Copy the resulting `.apk` to this folder as `questvault.apk`.
-
-## App Store / Google Play
-
-Keep store badges disabled on the site until approval. Update `website/index.html` store links when live.
+The workflow signs with the default debug key, which is fine for sideloading. Use a real
+keystore (or EAS) before publishing to Google Play.
