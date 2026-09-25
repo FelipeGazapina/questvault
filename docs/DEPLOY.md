@@ -81,9 +81,9 @@ Note:
 |----------|--------|
 | `QV_WEB_APP_URL` | Railway URL **without** trailing slash, e.g. `https://questvault-production.up.railway.app` |
 
-5. Upload APK: commit `website/downloads/questvault.apk` or use Netlify large-file storage
+5. APK: the **Android APK** GitHub workflow publishes `questvault.apk` to the `android-latest` release on every push to `main` that touches `app/`. The build writes its URL to `config.js` (`QV_APK_URL`, override with the env var) once it exists — trigger a Netlify redeploy after the first release.
 
-Build injects `config.js` so **INSTALAR WEB APP** buttons point to Railway.
+Build injects `config.js` so the web app buttons point to Railway and the APK button to the release.
 
 Optional `_redirects` (auto-generated when `QV_WEB_APP_URL` is set):
 ```
@@ -127,4 +127,4 @@ npx serve .
 | Convex auth fails / "could not forge hero" | Run `npm run setup:auth-keys` (missing `JWT_PRIVATE_KEY` / `JWKS` on Convex) |
 | Convex auth fails | `EXPO_PUBLIC_CONVEX_URL` must match deployed Convex deployment |
 | PWA install missing | Railway must serve HTTPS (default on Railway) |
-| APK button disabled | Add `website/downloads/questvault.apk` |
+| APK button disabled | Check the **Android APK** workflow run / `android-latest` release, then redeploy Netlify |

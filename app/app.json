@@ -2,13 +2,15 @@
   "expo": {
     "name": "QuestVault",
     "slug": "questvault",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "questvault",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "app.questvault",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,7 +18,9 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundImage": "./assets/images/icon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "app.questvault",
+      "versionCode": 2
     },
     "web": {
       "output": "static",
@@ -50,8 +54,7 @@
         "expo-image-picker",
         {
           "photosPermission": "O QuestVault usa suas fotos para você mostrar as missões que entregou.",
-          "cameraPermission": "O QuestVault usa a câmera para você fotografar a missão que entregou.",
-          "microphonePermission": false
+          "cameraPermission": "O QuestVault usa a câmera para você fotografar a missão que entregou."
         }
       ],
       [

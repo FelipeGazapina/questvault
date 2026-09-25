@@ -1,6 +1,6 @@
 # QuestVault — marketing site
 
-Pixel-art landing page for the game. **Phase 1 messaging only** — no vault, money, or roadmap spoilers. Future section is a vague tease.
+Landing page for QuestVault's family mode (Guardião + Aventureiro). It uses the same visual system as the app: dark wood and brass frames, Cinzel + Alegreya Sans, pixel props and scenes from `app/assets/rpg/`.
 
 ## Preview locally
 
@@ -50,21 +50,25 @@ Marketing buttons **INSTALAR WEB APP** / **ABRIR WEB APP** link to `/app/` and e
 | Path | Purpose |
 |---|---|
 | `index.html` | Single-page site (PT/EN) |
-| `styles.css` | Sweetie 16 design tokens |
-| `main.js` | i18n, mobile nav, APK availability check |
-| `assets/sprites/loot/` | Pixel loot icons (sync from `app/assets/sprites/loot/`) |
-| `downloads/questvault.apk` | Direct Android install (you add the build) |
+| `styles.css` | Tokens mirroring `app/src/lib/theme.ts` (frames, slots, brass buttons) |
+| `main.js` | i18n (PT/EN), mobile nav, web app + APK availability checks |
+| `config.js` | `QV_WEB_APP_URL` / `QV_APK_URL` (generated on Netlify by `scripts/netlify-build.mjs`) |
+| `assets/rpg/` | Scenes and sprites copied from `app/assets/rpg/` |
+| `downloads/questvault.apk` | Optional local APK fallback (used when `QV_APK_URL` is empty) |
 
-## Sync loot icons after Pencil edits
+## Sync art from the app
 
 ```powershell
-node design/render-loot-icons.mjs
-Copy-Item app/assets/sprites/loot/* website/assets/sprites/loot/ -Force
+Copy-Item app/assets/rpg/* website/assets/rpg/ -Recurse -Force
 ```
+
+## Android APK
+
+The **Android APK** GitHub workflow (`.github/workflows/android-apk.yml`) builds a release APK on every push to `main` that touches `app/`, and publishes it to the `android-latest` release. On Netlify, `scripts/netlify-build.mjs` checks that URL and writes it to `config.js` as `QV_APK_URL`, so the download button only turns on once the file exists. Override with the `QV_APK_URL` env var.
 
 ## Deploy
 
-Upload the `website/` folder to any static host (Cloudflare Pages, Netlify, S3, GitHub Pages). Ensure `downloads/questvault.apk` is served with correct MIME type (`application/vnd.android.package-archive`).
+Upload the `website/` folder to any static host (Cloudflare Pages, Netlify, S3, GitHub Pages). If you host the APK yourself, ensure `downloads/questvault.apk` is served with correct MIME type (`application/vnd.android.package-archive`).
 
 ## Pencil
 
