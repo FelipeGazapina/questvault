@@ -9,10 +9,17 @@ import { F, T } from "@/lib/theme";
 export type TabSpec = { name: string; labelKey: string; icon: IconName; badge?: number };
 
 /** Leather tab bar with a brass diamond over the active tab (design: "Componente: navegação"). */
-export function RpgTabBar({ state, navigation, tabs }: BottomTabBarProps & { tabs: TabSpec[] }) {
+export function RpgTabBar({
+  state,
+  navigation,
+  tabs,
+  hideOn = [],
+}: BottomTabBarProps & { tabs: TabSpec[]; hideOn?: string[] }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const activeName = state.routes[state.index]?.name;
+  // Focused flows (e.g. delivering a mission) take the whole screen.
+  if (activeName && hideOn.some((prefix) => activeName.startsWith(prefix))) return null;
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 6) }]}>

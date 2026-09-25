@@ -46,6 +46,20 @@
         }
       ],
       "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O QuestVault usa suas fotos para você mostrar as missões que entregou.",
+          "cameraPermission": "O QuestVault usa a câmera para você fotografar a missão que entregou.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "O QuestVault usa o microfone para você gravar como fez a missão."
+        }
+      ],
       "expo-localization"
     ],
     "experiments": {

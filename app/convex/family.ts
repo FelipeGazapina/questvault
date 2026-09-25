@@ -63,11 +63,14 @@ export const me = query({
       .sort((a, b) => a.createdAt - b.createdAt);
     const visible = user.role === "guardian" ? advs : advs.filter((a) => a._id === user.adventurerId);
     const adventurers = await Promise.all(visible.map((a) => adventurerSummary(ctx, family, a, now)));
+    const owner = await ctx.db.get(family.ownerId);
     return {
       user: { _id: user._id, name: user.name ?? "", role: user.role ?? null, isAnonymous: !!user.isAnonymous },
       family: {
         _id: family._id,
         name: family.name,
+        /** Signs the guardian's messages on the child's side ("Felipe, o Guardião"). */
+        guardianName: owner?.name ?? "",
         hasPin: !!family.pinHash,
         settings: family.settings,
         guardianPrefs: user.role === "guardian" ? family.guardianPrefs : null,

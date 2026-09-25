@@ -26,7 +26,7 @@ export default function AdventurerLayout() {
     <View style={{ flex: 1, backgroundColor: T.bg }}>
       <Tabs
         backBehavior="history"
-        tabBar={(props) => <RpgTabBar {...props} tabs={TABS} />}
+        tabBar={(props) => <RpgTabBar {...props} tabs={TABS} hideOn={["finalizar"]} />}
         screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: T.bg } }}
       />
       <DecisionDialog adventurerId={adventurer._id} />
