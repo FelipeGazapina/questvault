@@ -12,7 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#1a1c2c",
+        "backgroundColor": "#13100d",
         "foregroundImage": "./assets/images/icon.png",
         "backgroundImage": "./assets/images/icon.png"
       },
@@ -23,9 +23,9 @@
       "favicon": "./assets/images/favicon.png",
       "name": "QuestVault",
       "shortName": "QuestVault",
-      "description": "Your life as a pixel-art RPG — quests, XP, and loot.",
-      "themeColor": "#1a1c2c",
-      "backgroundColor": "#1a1c2c",
+      "description": "Family missions, rewards and screen time — an RPG for parents and kids.",
+      "themeColor": "#13100d",
+      "backgroundColor": "#13100d",
       "display": "standalone",
       "orientation": "portrait",
       "startUrl": "/app/",
@@ -38,7 +38,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#1a1c2c",
+          "backgroundColor": "#13100d",
           "android": {
             "image": "./assets/images/favicon.png",
             "imageWidth": 76

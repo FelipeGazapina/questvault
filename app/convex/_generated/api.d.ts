@@ -8,19 +8,21 @@
  * @module
  */
 
+import type * as access from "../access.js";
+import type * as apps from "../apps.js";
 import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
-import type * as game from "../game.js";
+import type * as family from "../family.js";
 import type * as http from "../http.js";
-import type * as lootIcons from "../lootIcons.js";
+import type * as missions from "../missions.js";
+import type * as notify from "../notify.js";
 import type * as push from "../push.js";
 import type * as pushActions from "../pushActions.js";
 import type * as pushMessages from "../pushMessages.js";
-import type * as questSpawn from "../questSpawn.js";
-import type * as quests from "../quests.js";
-import type * as shop from "../shop.js";
+import type * as rewards from "../rewards.js";
+import type * as rules from "../rules.js";
+import type * as tick from "../tick.js";
 import type * as users from "../users.js";
-import type * as vault from "../vault.js";
 
 import type {
   ApiFromModules,
@@ -29,19 +31,21 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  access: typeof access;
+  apps: typeof apps;
   auth: typeof auth;
   crons: typeof crons;
-  game: typeof game;
+  family: typeof family;
   http: typeof http;
-  lootIcons: typeof lootIcons;
+  missions: typeof missions;
+  notify: typeof notify;
   push: typeof push;
   pushActions: typeof pushActions;
   pushMessages: typeof pushMessages;
-  questSpawn: typeof questSpawn;
-  quests: typeof quests;
-  shop: typeof shop;
+  rewards: typeof rewards;
+  rules: typeof rules;
+  tick: typeof tick;
   users: typeof users;
-  vault: typeof vault;
 }>;
 
 /**

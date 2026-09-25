@@ -9,8 +9,8 @@ import { pt } from "./pt";
 const LANG_KEY = "questvault.lang";
 
 export const SUPPORTED_LANGUAGES = [
-  { code: "en", label: "EN · US" },
-  { code: "pt", label: "PT · BR" },
+  { code: "pt", label: "Português" },
+  { code: "en", label: "English" },
 ] as const;
 
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
@@ -19,9 +19,9 @@ export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
 // where device locale and storage are unavailable.
 const deviceLang: LanguageCode = (() => {
   try {
-    return getLocales()[0]?.languageCode === "pt" ? "pt" : "en";
+    return getLocales()[0]?.languageCode === "en" ? "en" : "pt";
   } catch {
-    return "en";
+    return "pt";
   }
 })();
 
@@ -31,7 +31,7 @@ void i18n.use(initReactI18next).init({
     pt: { translation: pt },
   },
   lng: deviceLang,
-  fallbackLng: "en",
+  fallbackLng: "pt",
   interpolation: { escapeValue: false },
 });
 

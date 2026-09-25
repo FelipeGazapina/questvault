@@ -1,6 +1,6 @@
-# QuestVault — Phase 1 app
+# QuestVault — family app
 
-React Native (Expo SDK 56) + Convex. Phase 1 scope: the pure game — quests, XP, stickers, wishlist only. **No money UI** (no play-gold, no vault tab). Real Pix and the vault debut together in Phase 2 (see [docs/07-roadmap.md](../docs/07-roadmap.md)).
+React Native (Expo SDK 56, web/PWA first) + Convex. Parents (**Guardião**) create missions, approve their children's deliveries and hand out coins, screen time and items; children (**Aventureiro**) finish missions with a photo plus a written or audio report and choose their reward. Product rules: [docs/11-family-mode.md](../docs/11-family-mode.md).
 
 ## Run it
 
@@ -16,44 +16,41 @@ npx convex dev
 npx expo start          # then press a (Android), i (iOS), w (web)
 ```
 
-`npx convex dev` writes `EXPO_PUBLIC_CONVEX_URL` into `.env.local` automatically. The anonymous deployment stores data under `~/.convex` — when you create a Convex account later, run `npx convex login` to link it and deploy to the cloud.
+`npx convex dev` writes `EXPO_PUBLIC_CONVEX_URL` into `.env.local` and regenerates `convex/_generated`. On a physical device replace `127.0.0.1` in that URL with your machine's LAN IP. Web Push needs VAPID keys (`npm run setup:vapid-keys`).
 
-Note for phone testing: `EXPO_PUBLIC_CONVEX_URL=http://127.0.0.1:3210` only works in emulators/web. On a physical device, replace `127.0.0.1` with your machine's LAN IP.
+Tests for the pure rules and notification copy: `npm test`.
 
-## What's implemented (Phase 1 checklist)
+## Flow
 
-- Sign in / Sign up — email + password (Convex Auth), pixel-styled screens, hero-name field on sign-up. Full feedback: loading labels ("FORGING YOUR HERO..." / "ENTERING THE DUNGEON..."), error panel with shake animation, inline blocker hints. Sign-up is gated by the **pixel padlock**: the lock forges piece by piece as password rules are met (8+ chars → letter → number → symbol or 12+); when the lock completes it turns gold, pulses "SECURE!", and registration unlocks
-- Quest Board — users forge their own quests (no starter/default quests). XP is **rolled at creation** within the type's range: daily 5–15, extra 20–50, boss 80–200 (`convex/game.ts` → `XP_RANGES`). Quests recur by period whether completed or not — daily resets every day, extra every ISO week, boss every calendar month — and can be completed once per period. Streaks, level-ups, completion toast
-- Loot Shop — wishlist only (title + price + link), OPEN LINK button; no progress bars or claim flow until Phase 2
-- Quest Log (LOG tab) — completed-quest dashboard: stat cards, last-7-days pixel bar chart, recent victories list. Data from `quests.dashboard`
-- Character — avatar, XP progress, name, stats, reward-tier selector (XP only / XP + stickers), level-gated cosmetic avatars
-- Wallet waitlist CTA — measures Phase 2 deposit intent (surface outside the hidden vault screen when wired for launch)
-- Business rules for conversion/ledger exist in Convex for Phase 2 reuse ([convex/game.ts](convex/game.ts), [convex/vault.ts](convex/vault.ts)) but are inactive while `FEATURES.vault` is off
-
-## Phase 1: no money UI (by design)
-
-`src/lib/features.ts` has `FEATURES.vault = false`: the Vault tab, gold pouch, R$ conversion lines on quests, progress bars, and the claim flow stay hidden. The Loot Shop is pure wishlist storage (title + price + link, with an OPEN LINK button).
-
-**Why:** Play-gold was removed from Phase 1 — a fake economy would complicate the Pix launch and erode trust when real money arrives. Vault UI and ledger code remain in the repo for Phase 2; enable `FEATURES.vault` only when BaaS + Pix ship together, not before.
-
-## Languages (i18n)
-
-PT-BR and EN-US via i18next ([src/i18n/](src/i18n/)). Device language is auto-detected (expo-localization); users switch in HERO → LANGUAGE / IDIOMA, persisted in AsyncStorage. To add a language: copy `en.ts`, translate, register it in `src/i18n/index.ts` (`resources` + `SUPPORTED_LANGUAGES`). Note: never touch AsyncStorage at module top level — Expo Router's web server renders modules in Node and crashes (that's why `initStoredLanguage()` runs from a layout effect).
+1. The guardian creates an account (email + password) and a family, then adds adventurers in **Ajustes**.
+2. Each child's phone: open the app → *Sou aventureiro* → type the 6-digit code from Ajustes. Or play on the parent's phone via **Quem está jogando** (a guardian PIN protects leaving a child profile).
+3. Missions spawn per period, the child finishes them (*Finalizar missão*), the guardian approves or asks for a redo (*Aprovações*), and the child sees the result as a dialog next time they open the app.
 
 ## Structure
 
 ```
-convex/            backend: schema.ts, game.ts (balance constants), users.ts, quests.ts, vault.ts, shop.ts
-src/app/           screens: index (Board), vault, shop, hero + _layout (tabs, fonts, Convex provider)
-src/components/    pixel.tsx (PixelText/Button/Panel/SegBar/ConfirmModal), hud.tsx
-src/lib/           palette.ts (Sweetie 16 + brl()), user-context.tsx (deviceId → Convex user)
-assets/sprites/    pixel art exported from design/questvault.pen
+convex/
+  schema.ts          families, adventurers, missions, missionRuns, rewards, time, apps, notifications
+  access.ts          who may act as whom; adventurer summaries
+  family.ts          me, create family, adventurers, PIN, pairing codes, settings
+  missions.ts        mission templates, run spawning, delivery, approvals, decision dialog
+  rewards.ts         market, purchases, allowance, screen-time bank and sessions
+  apps.ts            per-adventurer app policy (free / time / blocked)
+  notify.ts          inbox + push scheduling with quiet hours
+  tick.ts, crons.ts  5-minute cron: spawn runs, deadline warnings, reminders, daily summary
+  rules.ts           pure rules (unit-tested)
+  pushMessages.ts    notification copy (pt/en), shared with the client
+src/app/
+  index.tsx          Quem está jogando (profile chooser)
+  guardiao/          Painel, Aprovações, Missões, Recompensas, Apps, Revisar, Nova missão, Avisos, Ajustes
+  aventureiro/       Missões, Loja, Meu tempo, Finalizar missão
+src/components/      ui.tsx (design-system primitives), icons.tsx, tab-bar.tsx, access/, guardian/, adventurer/
+src/lib/             theme.ts, art.ts (pixel props + scenes), family.tsx (profile context), time.ts
+assets/rpg/          pixel art generated by design/family/
 ```
 
-- Identity: **Convex Auth** (email + password via `@convex-dev/auth`). Sign-in/sign-up screens match the Pencil designs; sessions persist via expo-secure-store on native (localStorage on web). Every backend function derives the user from the auth token (`requireUser`) — no client-supplied user ids. `users.ensureGameUser` seeds starter quests on first sign-in. Sign out lives on the Hero screen.
-- Money values are integer cents everywhere; rendered with `brl()` in a clean sans font, never pixel fonts (design rule D2.1).
-- Wishlist images: Convex file storage backend is ready (`shop.generateUploadUrl` / `shop.setImage` / URLs resolved in `shop.list`) — the image-picker UI is not wired yet.
+## Known limits
 
-## Not in Phase 1 (deliberately)
-
-Real money, Pix, KYC, subscriptions billing (tier choice is a free toggle for now), push notifications, social. See the roadmap for gates.
+- **App blocking** is stored and shown but not enforced: that needs a native companion (iOS Screen Time API / Android device admin). See docs/11.
+- **Push** is Web Push for the installed PWA; native push is not wired yet.
+- Local time uses a fixed per-family UTC offset (default Brasília, −03:00).

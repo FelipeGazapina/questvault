@@ -2,6 +2,8 @@
 
 > Working title. A life-gamification app where completing real-life quests unlocks your own money to spend on things you already wanted.
 
+> **Now a family app:** parents (Guardião) forge missions and approve their children's deliveries; children (Aventureiro) earn coins, screen time and items. See [docs/11-family-mode.md](docs/11-family-mode.md). The docs below describe the original single-player concept.
+
 **One-liner:** Other habit apps pay you in XP. Real games pay you in loot. QuestVault locks your own money in a vault — and your real-life quests are the key.
 
 ## The core insight
@@ -24,11 +26,13 @@ It is a **reward-framed commitment device**: Beeminder and stickK punish failure
 | [08-design-direction.md](docs/08-design-direction.md) | Pixel-art design system: palette, fonts, components, game vocabulary |
 | [09-risks-compliance.md](docs/09-risks-compliance.md) | BCB/BaaS regulation, LGPD, withdrawal rights, not-gambling |
 | [10-pitch-outline.md](docs/10-pitch-outline.md) | 12-slide presentation skeleton |
+| [11-family-mode.md](docs/11-family-mode.md) | **Family mode** — guardian/adventurer roles, missions with proof, approvals, rewards, screen time, apps, notifications |
 | [mockup/mockup.html](mockup/mockup.html) | Pixel-art app mockup — open in a browser, use in presentations |
 | [website/](website/README.md) | **Marketing landing page** — download APK, store badges coming soon, PT/EN |
 | [docs/DEPLOY.md](docs/DEPLOY.md) | **Netlify + Railway + Convex** deployment guide |
+| [design/family/](design/family/README.md) | Pixel-art props and scene generators for the family redesign |
 | [design/](design/README.md) | Pencil design file (`questvault.pen`) — 8 screens, design-system variables, reusable components; PNG exports in `design/exports/` |
-| [app/](app/README.md) | **Phase 1 implementation** — React Native (Expo) + Convex; quests, XP, wishlist loot shop, character screen (no vault until Phase 2) |
+| [app/](app/README.md) | **Family app** — React Native (Expo) + Convex; guardian and adventurer areas, missions with photo/audio proof, approvals, market, screen time, app policy, Web Push |
 
 ## The three phases at a glance
 

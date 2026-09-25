@@ -35,13 +35,13 @@ for (const name of ["icon-192.png", "icon-512.png", "favicon.png"]) {
 const manifest = {
   name: "QuestVault",
   short_name: "QuestVault",
-  description: "Your life as a pixel-art RPG — quests, XP, and loot.",
+  description: "Family missions, rewards and screen time — an RPG for parents and kids.",
   start_url: "/",
   scope: "/",
   display: "standalone",
   orientation: "portrait",
-  theme_color: "#1a1c2c",
-  background_color: "#1a1c2c",
+  theme_color: "#13100d",
+  background_color: "#13100d",
   lang: "pt-BR",
   prefer_related_applications: false,
   icons: [

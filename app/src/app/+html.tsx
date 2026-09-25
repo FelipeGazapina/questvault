@@ -19,7 +19,7 @@ export default function Root({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
         />
-        <meta name="theme-color" content="#1a1c2c" />
+        <meta name="theme-color" content="#13100d" />
         <meta name="application-name" content="QuestVault" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -30,7 +30,7 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <style
           dangerouslySetInnerHTML={{
-            __html: "html,body{height:100%;background-color:#1a1c2c}#root{display:flex;height:100%}",
+            __html: "html,body{height:100%;background-color:#13100d}#root{display:flex;height:100%}",
           }}
         />
         <ScrollViewStyleReset />
