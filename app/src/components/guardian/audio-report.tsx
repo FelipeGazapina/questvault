@@ -14,8 +14,19 @@ function clock(sec: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-/** Play/pause an adventurer's audio report, with a brass progress waveform and its duration. */
-export function AudioReport({ url, seconds, name }: { url: string; seconds: number | null; name: string }) {
+/** Play/pause an audio message, with a brass progress waveform and its duration. */
+export function AudioReport({
+  url,
+  seconds,
+  name,
+  playLabel,
+}: {
+  url: string;
+  seconds: number | null;
+  name: string;
+  /** Accessibility label for play; defaults to "Ouvir áudio de {name}". */
+  playLabel?: string;
+}) {
   const { t } = useTranslation();
   const player = useAudioPlayer(url);
   const status = useAudioPlayerStatus(player);
@@ -36,7 +47,7 @@ export function AudioReport({ url, seconds, name }: { url: string; seconds: numb
     <Card style={styles.card}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={playing ? t("guardian.audio.pause") : t("guardian.audio.play", { name })}
+        accessibilityLabel={playing ? t("guardian.audio.pause") : (playLabel ?? t("guardian.audio.play", { name }))}
         onPress={toggle}
         style={styles.play}
       >

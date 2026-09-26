@@ -6,6 +6,7 @@ import { View } from "react-native";
 
 import { AdventurerCard } from "@/components/guardian/adventurer-card";
 import { GiveTimeSheet, type GiveTimeTarget } from "@/components/guardian/give-time";
+import { PenaltySheet, type PenaltyTarget } from "@/components/guardian/penalty";
 import { ActivityRow } from "@/components/guardian/notice";
 import { Body, Button, Empty, Frame, IconButton, Label, Loading, Ornament, Screen, Slot, Sprite, Title } from "@/components/ui";
 import { useProfile } from "@/lib/family";
@@ -21,6 +22,7 @@ export default function GuardianHome() {
   const pending = useQuery(api.missions.pendingCount, {});
   const inbox = useQuery(api.notify.guardianInbox, { limit: 30 });
   const [giveTo, setGiveTo] = useState<GiveTimeTarget>(null);
+  const [penaltyTo, setPenaltyTo] = useState<PenaltyTarget>(null);
 
   if (!me) return <Loading />;
   const adventurers = me.adventurers;
@@ -94,6 +96,7 @@ export default function GuardianHome() {
             key={a._id}
             a={a}
             onGiveTime={() => setGiveTo({ _id: a._id, name: a.name })}
+            onPenalty={() => setPenaltyTo({ _id: a._id, name: a.name })}
             onApps={() => router.push(`/guardiao/apps?a=${a._id}` as never)}
           />
         ))
@@ -111,6 +114,7 @@ export default function GuardianHome() {
       )}
 
       <GiveTimeSheet target={giveTo} onClose={() => setGiveTo(null)} />
+      <PenaltySheet target={penaltyTo} onClose={() => setPenaltyTo(null)} />
     </Screen>
   );
 }

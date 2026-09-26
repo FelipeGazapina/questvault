@@ -42,6 +42,7 @@ export const guardian = {
     screen: "screen time",
     todayMissions: "missions today",
     giveTime: "Give time",
+    penalty: "Apply penalty",
     appsOf: "{{name}}'s apps",
     recent: "Recent activity",
     noActivity: "Nothing here yet. Deliveries and purchases show up in this list.",
@@ -54,6 +55,27 @@ export const guardian = {
     body: "The minutes go to the time bank and unlock timed apps.",
     confirm: "Give {{time}}",
     done: "{{time}} sent to {{name}}.",
+  },
+
+  penalty: {
+    title: "Penalty for {{name}}",
+    body: "Take coins and/or screen time. Balances can go negative; the next rewards pay the debt.",
+    coins: "Coins to take",
+    minutes: "Screen time to take",
+    none: "None",
+    reason: "Reason",
+    reasonText: "Text",
+    reasonAudio: "Audio",
+    reasonPlaceholder: "Why the penalty? The adventurer will read this.",
+    audioHint: "Record the reason. The adventurer hears it when they open the app.",
+    confirm: "Apply {{what}}",
+    pickSomething: "Pick coins, time or both.",
+    needReason: "Give the reason in text or audio.",
+    done: "Penalty applied. {{name}} will see it when they open the app.",
+    recent: "Latest penalties",
+    audioReason: "audio reason",
+    seen: "seen",
+    notSeen: "not seen yet",
   },
 
   approvals: {
@@ -104,6 +126,7 @@ export const guardian = {
   },
 
   audio: {
+    playReason: "Play the reason",
     play: "Play {{name}}'s audio",
     pause: "Pause audio",
   },

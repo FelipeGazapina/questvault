@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { normalizePushLocale, renderNotice, rewardLabel } from "./pushMessages.ts";
+import { normalizePushLocale, penaltyLabel, renderNotice, rewardLabel } from "./pushMessages.ts";
 
 test("normalizePushLocale", () => {
   assert.equal(normalizePushLocale("en-US"), "en");
@@ -39,4 +39,13 @@ test("renderNotice — redo quotes the guardian, or falls back", () => {
 
 test("renderNotice — unknown kind is harmless", () => {
   assert.deepEqual(renderNotice("nope", {}, "pt"), { title: "QuestVault", body: "" });
+});
+
+test("penalty notice — amounts and reason", () => {
+  assert.equal(penaltyLabel({ coins: 50, minutes: 30 }, "pt"), "−50 moedas e −30 min de tela");
+  assert.equal(penaltyLabel({ coins: 0, minutes: 30 }, "en"), "−30 min of screen time");
+  const n = renderNotice("penalty", { coins: 50, minutes: 0, reason: "Brigou com a irmã" }, "pt");
+  assert.equal(n.title, "Penalidade: −50 moedas");
+  assert.equal(n.body, "“Brigou com a irmã”");
+  assert.equal(renderNotice("penalty", { coins: 0, minutes: 15 }, "en").body, "Your guardian left you an audio message.");
 });

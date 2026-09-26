@@ -213,7 +213,8 @@ export default defineSchema({
     minutes: v.number(),
     remaining: v.number(),
     expiresAt: v.number(),
-    source: v.union(v.literal("mission"), v.literal("shop"), v.literal("gift")),
+    /** "penalty" rows are time debt: negative `remaining`, no expiry, paid off by new grants. */
+    source: v.union(v.literal("mission"), v.literal("shop"), v.literal("gift"), v.literal("penalty")),
     createdAt: v.number(),
   }).index("by_adventurer", ["adventurerId"]),
 
@@ -224,6 +225,21 @@ export default defineSchema({
     minutes: v.number(),
     startedAt: v.number(),
     endsAt: v.number(),
+  }).index("by_adventurer", ["adventurerId"]),
+
+  /** Guardian-applied penalty: coins and/or screen minutes taken, with a text or audio reason. */
+  penalties: defineTable({
+    familyId: v.id("families"),
+    adventurerId: v.id("adventurers"),
+    /** Amounts taken (≥ 0). Balances may go negative. */
+    coins: v.number(),
+    minutes: v.number(),
+    reason: v.optional(v.string()),
+    audioId: v.optional(v.id("_storage")),
+    audioSeconds: v.optional(v.number()),
+    createdAt: v.number(),
+    /** Set when the adventurer has seen the penalty dialog. */
+    seenAt: v.optional(v.number()),
   }).index("by_adventurer", ["adventurerId"]),
 
   /** Per-adventurer app policy. Enforcement needs the native companion (see docs/11-family-mode.md). */

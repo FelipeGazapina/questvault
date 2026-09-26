@@ -17,6 +17,7 @@ import type * as http from "../http.js";
 import type * as missions from "../missions.js";
 import type * as notify from "../notify.js";
 import type * as passwordReset from "../passwordReset.js";
+import type * as penalties from "../penalties.js";
 import type * as push from "../push.js";
 import type * as pushActions from "../pushActions.js";
 import type * as pushMessages from "../pushMessages.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   missions: typeof missions;
   notify: typeof notify;
   passwordReset: typeof passwordReset;
+  penalties: typeof penalties;
   push: typeof push;
   pushActions: typeof pushActions;
   pushMessages: typeof pushMessages;

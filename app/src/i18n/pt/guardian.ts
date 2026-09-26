@@ -42,6 +42,7 @@ export const guardian = {
     screen: "de tela",
     todayMissions: "missões hoje",
     giveTime: "Dar tempo",
+    penalty: "Aplicar penalidade",
     appsOf: "Apps de {{name}}",
     recent: "Atividade recente",
     noActivity: "Nada por aqui ainda. As entregas e compras aparecem nesta lista.",
@@ -54,6 +55,27 @@ export const guardian = {
     body: "Os minutos vão para o banco de tempo e usam os apps com tempo.",
     confirm: "Dar {{time}}",
     done: "{{time}} enviados para {{name}}.",
+  },
+
+  penalty: {
+    title: "Penalidade para {{name}}",
+    body: "Tire moedas e/ou tempo de tela. O saldo pode ficar negativo; as próximas recompensas pagam a dívida.",
+    coins: "Moedas a tirar",
+    minutes: "Tempo de tela a tirar",
+    none: "Nada",
+    reason: "Motivo",
+    reasonText: "Texto",
+    reasonAudio: "Áudio",
+    reasonPlaceholder: "Por que a penalidade? O aventureiro vai ler isto.",
+    audioHint: "Grave o motivo. O aventureiro ouve quando abrir o app.",
+    confirm: "Aplicar {{what}}",
+    pickSomething: "Escolha moedas, tempo ou os dois.",
+    needReason: "Explique o motivo em texto ou áudio.",
+    done: "Penalidade aplicada. {{name}} vai ver o aviso ao abrir o app.",
+    recent: "Últimas penalidades",
+    audioReason: "motivo em áudio",
+    seen: "visto",
+    notSeen: "ainda não viu",
   },
 
   approvals: {
@@ -104,6 +126,7 @@ export const guardian = {
   },
 
   audio: {
+    playReason: "Ouvir o motivo",
     play: "Ouvir áudio de {{name}}",
     pause: "Pausar áudio",
   },

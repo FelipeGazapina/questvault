@@ -90,7 +90,7 @@ export function useAdventurer(): AdventurerSummary | null {
 /** Map a Convex error to a user-facing i18n key under `errors.*` (falls back to generic). */
 export function errorKey(e: unknown): string {
   const msg = e instanceof Error ? e.message : String(e);
-  for (const code of ["NOT_ENOUGH_COINS", "NOT_ENOUGH_TIME", "DAILY_CAP", "SESSION_ACTIVE", "PHOTO_REQUIRED", "REPORT_REQUIRED", "TOO_MANY_ATTEMPTS"]) {
+  for (const code of ["NOT_ENOUGH_COINS", "NOT_ENOUGH_TIME", "DAILY_CAP", "SESSION_ACTIVE", "PHOTO_REQUIRED", "REPORT_REQUIRED", "TOO_MANY_ATTEMPTS", "PENALTY_EMPTY", "PENALTY_REASON"]) {
     if (msg.includes(code)) return `errors.${code}`;
   }
   return "errors.generic";

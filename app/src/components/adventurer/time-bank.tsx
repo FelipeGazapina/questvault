@@ -33,7 +33,7 @@ function countdown(ms: number): string {
 /** Minutes that can be started right now: limited by the bank and by today's cap. */
 export function availableMinutes(a: AdventurerSummary, dailyCapMin: number): { capLeft: number; available: number } {
   const capLeft = Math.max(0, dailyCapMin - a.usedTodayMin);
-  return { capLeft, available: Math.min(a.timeBankMin, capLeft) };
+  return { capLeft, available: Math.max(0, Math.min(a.timeBankMin, capLeft)) };
 }
 
 /** Time-bank frame: balance and "Usar tempo", or a live countdown while a session is running. */
@@ -80,7 +80,9 @@ export function TimeBankCard({
   }
 
   const caption =
-    capLeft <= 0
+    a.timeBankMin < 0
+      ? t("adventurer.lock.debt", { time: formatMinutes(-a.timeBankMin) })
+      : capLeft <= 0
       ? t("adventurer.lock.capReached")
       : a.timeBankMin <= 0
         ? t("adventurer.lock.noBalance")
@@ -91,7 +93,7 @@ export function TimeBankCard({
       <View style={styles.row}>
         <Sprite name="hourglass" width={40} />
         <View style={{ flex: 1 }}>
-          <Num size={26} color={T.time}>
+          <Num size={26} color={a.timeBankMin < 0 ? T.bad : T.time}>
             {formatMinutes(a.timeBankMin)}
           </Num>
           <Body size={14} color={T.muted}>

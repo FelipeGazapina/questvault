@@ -35,6 +35,14 @@ Every backend function derives identity from the auth token. A paired child devi
 - **Screen time** (`rewards.startScreenTime`): spends banked minutes, oldest-expiring first, capped by the family's daily maximum; a "5 min left" push is scheduled.
 - **Allowance (mesada)**: optional exchange of 100-coin blocks into the adventurer's cofre (default R$ 5,00 per 100 coins). Money is shown with `brl()` in a clean sans.
 
+## Penalties
+
+The guardian can take coins and/or screen minutes from an adventurer ("Aplicar penalidade" on the painel card, `penalties.apply`). The reason is required, in text or as a recorded audio message.
+
+- **Coins** are subtracted and may go negative; purchases and the allowance exchange stay blocked until rewards bring the balance back up.
+- **Screen time** is taken from the bank, oldest-expiring grants first. Whatever the bank can't cover becomes time debt: a `timeGrants` row with `source: "penalty"`, negative `remaining` and no expiry. Every new grant (mission, shop, gift) pays debt first (`rewards.grantTime`).
+- The adventurer gets a push and, on the next open (or live, if the app is open), a dialog with what was taken and the reason: the text, or a player for the audio. Penalties show before mission decisions, one at a time, and are acknowledged with `penalties.markSeen`.
+
 ## Apps
 
 Each adventurer has an app list (`appRules`) where every app is **Livre** (always open), **Tempo** (opens while screen time is running) or **Bloqueado**. Telefone and Mensagens are essential and always free. "Bloqueio ativo" toggles the whole policy.
@@ -62,6 +70,6 @@ Quiet hours: pushes to adventurers wait until the family bedtime ends (default 2
 
 ## Data model (Convex)
 
-`families` (settings + guardian prefs + PIN hash) · `adventurers` · `pairingCodes` · `missions` (templates) · `missionRuns` (one per adventurer per period, holds proof and decision) · `shopItems` · `timePacks` · `purchases` · `timeGrants` · `screenSessions` · `appRules` · `notifications` · `pushSubscriptions`. The old single-player tables (`questPool`, `questInstances`, `wishlist`, `ledger`, `pushPeriodDispatches`) stay in the schema, unused, so existing deployments keep validating.
+`families` (settings + guardian prefs + PIN hash) · `adventurers` · `pairingCodes` · `missions` (templates) · `missionRuns` (one per adventurer per period, holds proof and decision) · `shopItems` · `timePacks` · `purchases` · `timeGrants` · `penalties` · `screenSessions` · `appRules` · `notifications` · `pushSubscriptions`. The old single-player tables (`questPool`, `questInstances`, `wishlist`, `ledger`, `pushPeriodDispatches`) stay in the schema, unused, so existing deployments keep validating.
 
-Pure rules (XP, levels, ranks, local time with a fixed family UTC offset, quiet windows, time-bank spending, streaks) live in `convex/rules.ts` and are unit-tested (`npm test`).
+Pure rules (XP, levels, ranks, local time with a fixed family UTC offset, quiet windows, time-bank spending and time debt, streaks) live in `convex/rules.ts` and are unit-tested (`npm test`).
