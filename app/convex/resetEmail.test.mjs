@@ -15,7 +15,7 @@ test("normalizeResetCode keeps only digits", () => {
 
 test("renderResetEmail carries the code and expiry in both languages", () => {
   const { subject, text, html } = renderResetEmail("12345678", 15);
-  assert.match(subject, /1234 5678/);
+  assert.doesNotMatch(subject, /1234|5678/);
   assert.match(text, /redefinir a senha do QuestVault é: 1234 5678/);
   assert.match(text, /expires in 15 minutes/);
   assert.match(html, /1234 5678/);

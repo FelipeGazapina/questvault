@@ -16,7 +16,6 @@ type Step = "request" | "verify";
 function resetErrorKey(e: unknown): string {
   const msg = e instanceof Error ? e.message : String(e);
   if (msg.includes("TooManyFailedAttempts")) return "access.reset.errors.tooMany";
-  if (msg.includes("InvalidAccountId")) return "access.reset.errors.noAccount";
   if (msg.includes("EMAIL_NOT_CONFIGURED") || msg.includes("EMAIL_SEND_FAILED")) return "access.reset.errors.mail";
   if (msg.includes("Invalid password")) return "access.reset.errors.password";
   if (msg.includes("code")) return "access.reset.errors.code";

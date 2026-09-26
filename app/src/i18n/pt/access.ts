@@ -34,7 +34,7 @@ export const access = {
     title: "Esqueci minha senha",
     requestHint: "Digite o e-mail da conta. Vamos mandar um código de 8 dígitos.",
     verifyHint: "Digite o código que chegou no seu e-mail e escolha uma senha nova.",
-    sent: "Código enviado para {{email}}. Confira também o spam.",
+    sent: "Se houver uma conta com {{email}}, enviamos um código. Confira também o spam.",
     send: "Enviar código",
     code: "Código",
     codePlaceholder: "0000 0000",
@@ -43,7 +43,6 @@ export const access = {
     resend: "Reenviar código",
     back: "Voltar para entrar",
     errors: {
-      noAccount: "Não achamos uma conta com esse e-mail.",
       code: "Código inválido ou vencido. Peça um novo.",
       codeLength: "O código tem {{n}} dígitos.",
       password: "A senha precisa ter pelo menos 8 caracteres.",

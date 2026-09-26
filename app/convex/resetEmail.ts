@@ -20,7 +20,8 @@ export function normalizeResetCode(input: string): string {
 
 export function renderResetEmail(code: string, minutes = RESET_CODE_MINUTES): ResetEmail {
   const shown = formatResetCode(code);
-  const subject = `QuestVault: código para redefinir a senha (${shown})`;
+  // The code stays out of the subject so it never shows in inbox previews or mail metadata.
+  const subject = "QuestVault: código para redefinir a senha";
   const text = [
     "Olá, Guardião!",
     "",

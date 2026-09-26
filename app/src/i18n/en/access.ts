@@ -34,7 +34,7 @@ export const access = {
     title: "Forgot my password",
     requestHint: "Enter your account email. We'll send an 8-digit code.",
     verifyHint: "Enter the code from your email and choose a new password.",
-    sent: "Code sent to {{email}}. Check your spam folder too.",
+    sent: "If there's an account for {{email}}, we sent it a code. Check your spam folder too.",
     send: "Send code",
     code: "Code",
     codePlaceholder: "0000 0000",
@@ -43,7 +43,6 @@ export const access = {
     resend: "Resend code",
     back: "Back to sign in",
     errors: {
-      noAccount: "We couldn't find an account with that email.",
       code: "Invalid or expired code. Ask for a new one.",
       codeLength: "The code has {{n}} digits.",
       password: "The password needs at least 8 characters.",
