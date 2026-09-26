@@ -33,6 +33,11 @@ export const apply = mutation({
     if (coins === 0 && minutes === 0) throw new Error("PENALTY_EMPTY");
     const reason = args.reason?.trim().slice(0, MAX_REASON) || undefined;
     if (!reason && !args.audioId) throw new Error("PENALTY_REASON");
+    if (args.audioId) {
+      const audioId = args.audioId;
+      const claim = await ctx.db.query("uploads").withIndex("by_storage", (q) => q.eq("storageId", audioId)).unique();
+      if (!claim || claim.familyId !== family._id) throw new Error("Audio not found");
+    }
 
     const now = Date.now();
     if (coins > 0) await ctx.db.patch(adventurer._id, { coins: adventurer.coins - coins });
@@ -79,12 +84,11 @@ export const unseen = query({
   args: { adventurerId: v.id("adventurers") },
   handler: async (ctx, { adventurerId }) => {
     await requireAdventurer(ctx, adventurerId);
-    const rows = await ctx.db
+    // Unseen rows only, oldest first — acknowledged ones never crowd older unseen ones out.
+    const pending = await ctx.db
       .query("penalties")
-      .withIndex("by_adventurer", (q) => q.eq("adventurerId", adventurerId))
-      .order("desc")
+      .withIndex("by_adventurer_seen", (q) => q.eq("adventurerId", adventurerId).eq("seenAt", undefined))
       .take(50);
-    const pending = rows.filter((p) => !p.seenAt).reverse();
     return await Promise.all(
       pending.map(async (p) => ({
         _id: p._id,

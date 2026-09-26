@@ -326,6 +326,25 @@ export const generateUploadUrl = mutation({
   },
 });
 
+/**
+ * Record the uploader's family for a freshly uploaded file. Only the uploader ever sees the new
+ * storage id, so the first claim wins; a file claimed by another family is refused.
+ */
+export const claimUpload = mutation({
+  args: { storageId: v.id("_storage") },
+  returns: v.null(),
+  handler: async (ctx, { storageId }) => {
+    const { family } = await requireFamily(ctx);
+    const claim = await ctx.db.query("uploads").withIndex("by_storage", (q) => q.eq("storageId", storageId)).unique();
+    if (claim) {
+      if (claim.familyId !== family._id) throw new Error("Upload not found");
+      return null;
+    }
+    await ctx.db.insert("uploads", { storageId, familyId: family._id, createdAt: Date.now() });
+    return null;
+  },
+});
+
 export const submitRun = mutation({
   args: {
     runId: v.id("missionRuns"),

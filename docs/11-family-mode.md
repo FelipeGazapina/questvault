@@ -70,6 +70,6 @@ Quiet hours: pushes to adventurers wait until the family bedtime ends (default 2
 
 ## Data model (Convex)
 
-`families` (settings + guardian prefs + PIN hash) · `adventurers` · `pairingCodes` · `missions` (templates) · `missionRuns` (one per adventurer per period, holds proof and decision) · `shopItems` · `timePacks` · `purchases` · `timeGrants` · `penalties` · `screenSessions` · `appRules` · `notifications` · `pushSubscriptions`. The old single-player tables (`questPool`, `questInstances`, `wishlist`, `ledger`, `pushPeriodDispatches`) stay in the schema, unused, so existing deployments keep validating.
+`families` (settings + guardian prefs + PIN hash) · `adventurers` · `pairingCodes` · `missions` (templates) · `missionRuns` (one per adventurer per period, holds proof and decision) · `shopItems` · `timePacks` · `purchases` · `timeGrants` · `penalties` · `uploads` (which family uploaded each stored file) · `screenSessions` · `appRules` · `notifications` · `pushSubscriptions`. The old single-player tables (`questPool`, `questInstances`, `wishlist`, `ledger`, `pushPeriodDispatches`) stay in the schema, unused, so existing deployments keep validating.
 
 Pure rules (XP, levels, ranks, local time with a fixed family UTC offset, quiet windows, time-bank spending and time debt, streaks) live in `convex/rules.ts` and are unit-tested (`npm test`).

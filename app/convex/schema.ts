@@ -240,7 +240,16 @@ export default defineSchema({
     createdAt: v.number(),
     /** Set when the adventurer has seen the penalty dialog. */
     seenAt: v.optional(v.number()),
-  }).index("by_adventurer", ["adventurerId"]),
+  })
+    .index("by_adventurer", ["adventurerId"])
+    .index("by_adventurer_seen", ["adventurerId", "seenAt"]),
+
+  /** Which family uploaded a stored file — claimed right after upload, checked before attaching it. */
+  uploads: defineTable({
+    storageId: v.id("_storage"),
+    familyId: v.id("families"),
+    createdAt: v.number(),
+  }).index("by_storage", ["storageId"]),
 
   /** Per-adventurer app policy. Enforcement needs the native companion (see docs/11-family-mode.md). */
   appRules: defineTable({
