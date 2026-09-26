@@ -23,11 +23,25 @@ const MIME = {
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
   ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
   ".txt": "text/plain; charset=utf-8",
 };
 
-function send(res, status, body, type = "text/plain") {
-  res.writeHead(status, { "Content-Type": type, "Cache-Control": "public, max-age=3600" });
+/**
+ * Pages, the service worker and the manifest must be revalidated on every load, or a browser keeps
+ * running the previous deploy's bundle (and its baked-in backend URL) for as long as it's cached.
+ * Bundles and assets carry a content hash in their name, so they can be cached for good.
+ */
+const HASHED = /^\/(_expo\/static|assets)\/.*[.-][0-9a-f]{16,}\.[a-z0-9]+$/i;
+
+function cacheControl(urlPath, file) {
+  if (!file || file.endsWith(".html") || /\/(sw\.js|manifest\.json)$/.test(file)) return "no-cache";
+  if (HASHED.test(urlPath)) return "public, max-age=31536000, immutable";
+  return "public, max-age=3600";
+}
+
+function send(res, status, body, type = "text/plain", cache = "no-cache") {
+  res.writeHead(status, { "Content-Type": type, "Cache-Control": cache });
   res.end(body);
 }
 
@@ -54,7 +68,8 @@ createServer((req, res) => {
     }
     const ext = extname(file);
     const data = readFileSync(file);
-    send(res, 200, data, MIME[ext] ?? "application/octet-stream");
+    const urlPath = (req.url ?? "/").split("?")[0];
+    send(res, 200, data, MIME[ext] ?? "application/octet-stream", cacheControl(urlPath, file));
   } catch {
     send(res, 404, "Not found");
   }
