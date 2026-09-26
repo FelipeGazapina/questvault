@@ -7,7 +7,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  QV_WEB_APP_URL = "https://questvault-production.up.railway.app"
+  QV_WEB_APP_URL = "https://questvault.lypes.agency"
 
 [[headers]]
   for = "/downloads/*"

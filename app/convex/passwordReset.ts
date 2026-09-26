@@ -6,7 +6,7 @@ const SEND_TIMEOUT_MS = 10_000;
 
 /**
  * Emails a numeric code for the Password provider's "reset" flow, sent through Resend.
- * Convex env: AUTH_RESEND_KEY (required), AUTH_EMAIL_FROM (e.g. "QuestVault <no-reply@yourdomain>").
+ * Convex env: AUTH_RESEND_KEY (required), AUTH_EMAIL_FROM (optional sender override).
  */
 export const PasswordReset = Email({
   id: "password-reset",
@@ -35,7 +35,7 @@ export const PasswordReset = Email({
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: process.env.AUTH_EMAIL_FROM ?? "QuestVault <onboarding@resend.dev>",
+          from: process.env.AUTH_EMAIL_FROM ?? "QuestVault <contato@lypes.agency>",
           to: [email],
           subject,
           text,
