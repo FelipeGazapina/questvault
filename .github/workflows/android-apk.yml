@@ -55,7 +55,8 @@ jobs:
         working-directory: app/android
         # Release lint ran out of Metaspace on the runner; it adds nothing to a sideload build.
         run: |
-          echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g" >> gradle.properties
+          # Edit in place: the generated file has no trailing newline, so appending corrupts its last line.
+          sed -i 's/^org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g/' gradle.properties
           ./gradlew assembleRelease --no-daemon -x lintVitalRelease
 
       - name: Collect APK
