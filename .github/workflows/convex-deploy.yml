@@ -34,6 +34,12 @@ jobs:
 
       - run: npm test
 
+      - name: Ensure deployment variables
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://questvault.lypes.agency' }}
+          AUTH_RESEND_KEY: ${{ secrets.AUTH_RESEND_KEY }}
+        run: node scripts/ensure-convex-env.mjs
+
       - name: Deploy functions
         run: |
           if [ -z "$CONVEX_DEPLOY_KEY" ]; then

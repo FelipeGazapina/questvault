@@ -24,7 +24,7 @@ jobs:
         working-directory: app
     env:
       # Public client URL, baked into the JS bundle. Override with a repository variable.
-      EXPO_PUBLIC_CONVEX_URL: ${{ vars.EXPO_PUBLIC_CONVEX_URL || 'https://doting-wren-467.convex.cloud' }}
+      EXPO_PUBLIC_CONVEX_URL: ${{ vars.EXPO_PUBLIC_CONVEX_URL || 'https://shocking-greyhound-787.convex.cloud' }}
       EXPO_PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.EXPO_PUBLIC_VAPID_PUBLIC_KEY }}
       NODE_ENV: production
     steps:

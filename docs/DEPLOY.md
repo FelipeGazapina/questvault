@@ -24,7 +24,7 @@ npx convex dev   # creates deployment, writes .env.local
 
 ```powershell
 # After login, with .env.local pointing at your cloud deployment (not anonymous:):
-npm run setup:auth-keys
+npm run setup:env
 # Or interactively:
 npx @convex-dev/auth --web-server-url https://YOUR-RAILWAY-URL.up.railway.app
 ```
@@ -62,7 +62,9 @@ Note:
 
 ### Convex deploy from GitHub
 
-The **Convex deploy** workflow (`.github/workflows/convex-deploy.yml`) runs on every push to `main` that touches `app/convex/` and pushes schema, functions and crons. It needs the repository secret `CONVEX_DEPLOY_KEY` (GitHub → Settings → Secrets and variables → Actions). A `dev:` key is pushed with `convex dev --once`, a `prod:` key with `convex deploy`. It can also be run by hand (**Actions → Convex deploy → Run workflow**).
+Production backend: `shocking-greyhound-787` (`EXPO_PUBLIC_CONVEX_URL=https://shocking-greyhound-787.convex.cloud` on Railway and in the APK build).
+
+The **Convex deploy** workflow (`.github/workflows/convex-deploy.yml`) runs on every push to `main` that touches `app/convex/` and pushes schema, functions and crons. It needs the repository secret `CONVEX_DEPLOY_KEY` (GitHub → Settings → Secrets and variables → Actions). A `dev:` key is pushed with `convex dev --once`, a `prod:` key with `convex deploy`. Before deploying it sets any missing app variables on the deployment (`scripts/ensure-convex-env.mjs`): JWT keys, `SITE_URL`, VAPID keys and, if the `AUTH_RESEND_KEY` secret exists, the Resend key. It can also be run by hand (**Actions → Convex deploy → Run workflow**).
 
 ---
 
@@ -138,7 +140,7 @@ npx serve .
 | Issue | Fix |
 |-------|-----|
 | Web app blank / 404 assets | Check `EXPO_BASE_URL=/` on Railway |
-| Convex auth fails / "could not forge hero" | Run `npm run setup:auth-keys` (missing `JWT_PRIVATE_KEY` / `JWKS` on Convex) |
+| Convex auth fails / "could not forge hero" | Run the **Convex deploy** workflow (it sets missing `JWT_PRIVATE_KEY` / `JWKS`) or `npm run setup:env` |
 | Convex auth fails | `EXPO_PUBLIC_CONVEX_URL` must match deployed Convex deployment |
 | PWA install missing | Railway must serve HTTPS (default on Railway) |
 | APK button disabled | Check the **Android APK** workflow run / `android-latest` release, then redeploy Netlify |

@@ -6,7 +6,7 @@
 |---------|-----|
 | **Marketing (Netlify)** | https://questvaultrpg.netlify.app |
 | **Web app / PWA (Railway)** | https://questvault.lypes.agency (CNAME → Railway; also https://questvault-production.up.railway.app) |
-| **Backend (Convex)** | https://doting-wren-467.convex.cloud |
+| **Backend (Convex)** | https://shocking-greyhound-787.convex.cloud (production) |
 | **GitHub** | https://github.com/FelipeGazapina/questvault |
 
 ## Config
@@ -16,7 +16,7 @@
 - Railway project `questvault` / service `questvault`: root `/app`, Dockerfile `Dockerfile.railway`, deploys from `main`
 - Convex backend: pushed by the **Convex deploy** GitHub workflow (secret `CONVEX_DEPLOY_KEY`)
 - Android APK: **Android APK** GitHub workflow → `android-latest` release
-- Convex deployment: `dev:doting-wren-467`
+- Convex deployment: `prod:shocking-greyhound-787` (the old `dev:doting-wren-467` holds v1 data only)
 
 ## Verify after deploy
 
