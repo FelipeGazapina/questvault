@@ -4,7 +4,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import { internalMutation, mutation, query, type MutationCtx } from "./_generated/server";
 import { requireAdventurer, requireGuardian } from "./access";
 import { notify } from "./notify";
-import { COIN_BLOCK, localParts, spendTime } from "./rules";
+import { COIN_BLOCK, localParts, settleTimeDebt, spendTime } from "./rules";
 
 const DAY = 86_400_000;
 const MIN = 60_000;
@@ -138,19 +138,35 @@ async function charge(ctx: MutationCtx, adv: Doc<"adventurers">, price: number) 
   await ctx.db.patch(adv._id, { coins: adv.coins - price });
 }
 
-async function grantTime(
+/**
+ * Bank new screen minutes. Time debt from penalties is paid off first; only what's left
+ * becomes spendable (the grant row keeps the full `minutes` for history).
+ */
+export async function grantTime(
   ctx: MutationCtx,
   family: Doc<"families">,
   adventurerId: Id<"adventurers">,
   minutes: number,
-  source: Doc<"timeGrants">["source"],
+  source: Exclude<Doc<"timeGrants">["source"], "penalty">,
 ) {
   const now = Date.now();
+  const debts = (await ctx.db.query("timeGrants").withIndex("by_adventurer", (q) => q.eq("adventurerId", adventurerId)).collect())
+    .filter((g) => g.source === "penalty" && g.remaining < 0)
+    .sort((a, b) => a.createdAt - b.createdAt);
+  const settled = settleTimeDebt(
+    debts.map((d) => -d.remaining),
+    minutes,
+  );
+  for (let i = 0; i < debts.length; i += 1) {
+    const owed = settled.debts[i];
+    if (owed === 0) await ctx.db.delete(debts[i]._id);
+    else if (owed !== -debts[i].remaining) await ctx.db.patch(debts[i]._id, { remaining: -owed });
+  }
   await ctx.db.insert("timeGrants", {
     familyId: family._id,
     adventurerId,
     minutes,
-    remaining: minutes,
+    remaining: settled.left,
     expiresAt: now + family.settings.timeExpiryDays * DAY,
     source,
     createdAt: now,

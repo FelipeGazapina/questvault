@@ -88,6 +88,18 @@ export const adventurer = {
     later: "Depois",
     counter: "{{n}} de {{total}} missões decididas enquanto você estava fora",
   },
+  penalty: {
+    kicker: "PENALIDADE",
+    title: "O Guardião aplicou uma penalidade",
+    coins: "−{{count}} moedas",
+    minutes: "−{{time}} de tela",
+    balance: "Agora você tem {{coins}} moedas e {{time}} de tela.",
+    debt: "Saldo negativo: as próximas recompensas pagam a dívida.",
+    listen: "Ouça o recado do Guardião:",
+    ok: "Entendi",
+    counter: "{{n}} de {{total}}",
+  },
+
   shop: {
     title: "Mercado",
     coins: "{{count}} moedas",
@@ -124,6 +136,7 @@ export const adventurer = {
     useTime: "Usar tempo",
     capLeft: "Hoje ainda dá para usar até {{time}}",
     capReached: "O limite de tela de hoje acabou. Volte amanhã!",
+    debt: "Você está devendo {{time}} de tela. O próximo tempo que ganhar paga a dívida.",
     noBalance: "Seu banco está vazio. Finalize missões ou compre tempo no mercado.",
     sessionLeft: "restam",
     sessionEnds: "Tempo de tela ativo · termina às {{time}}",

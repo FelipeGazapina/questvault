@@ -1,9 +1,10 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { AccessLayout } from "@/components/access/access-layout";
+import { ResetPassword } from "@/components/access/reset-password";
 import { Body, Button, Field, Frame, Ornament, Segmented, Title } from "@/components/ui";
 import { T } from "@/lib/theme";
 
@@ -33,6 +34,7 @@ export function AuthScreen() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState<"password" | "anonymous" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
 
   const validate = (): string | null => {
     if (flow === "signUp" && !name.trim()) return "access.auth.errors.name";
@@ -79,6 +81,20 @@ export function AuthScreen() {
     setFlow(next);
     setError(null);
   };
+
+  if (resetting) {
+    return (
+      <AccessLayout>
+        <ResetPassword
+          initialEmail={email}
+          onBack={() => {
+            setResetting(false);
+            setError(null);
+          }}
+        />
+      </AccessLayout>
+    );
+  }
 
   return (
     <AccessLayout>
@@ -131,6 +147,22 @@ export function AuthScreen() {
           onSubmitEditing={submit}
           returnKeyType="go"
         />
+        {flow === "signIn" ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              setResetting(true);
+              setError(null);
+            }}
+            disabled={!!busy}
+            hitSlop={8}
+            style={{ alignSelf: "flex-end", marginTop: -6 }}
+          >
+            <Body size={14} color={T.brassHi}>
+              {t("access.auth.forgot")}
+            </Body>
+          </Pressable>
+        ) : null}
         {error ? (
           <Body size={15} color={T.bad}>
             {error}

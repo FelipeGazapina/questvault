@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Bar, Body, Card, CrestBadge, Frame, Num, Sprite, Title } from "@/components/ui";
 import type { SpriteName } from "@/lib/art";
 import type { AdventurerSummary } from "@/lib/family";
-import { formatMinutes, T } from "@/lib/theme";
+import { formatCoins, formatMinutes, T } from "@/lib/theme";
 
 function Tile({ sprite, width, value, color, label }: { sprite: SpriteName; width: number; value: string; color: string; label: string }) {
   return (
@@ -46,8 +46,8 @@ export function AdventurerHud({ adventurer: a }: { adventurer: AdventurerSummary
         </View>
       </View>
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <Tile sprite="coin" width={20} value={String(a.coins)} color={T.coin} label={t("adventurer.hud.coinsA11y", { count: a.coins })} />
-        <Tile sprite="hourglass" width={19} value={time} color={T.time} label={t("adventurer.hud.timeA11y", { time })} />
+        <Tile sprite="coin" width={20} value={formatCoins(a.coins)} color={a.coins < 0 ? T.bad : T.coin} label={t("adventurer.hud.coinsA11y", { count: a.coins })} />
+        <Tile sprite="hourglass" width={19} value={time} color={a.timeBankMin < 0 ? T.bad : T.time} label={t("adventurer.hud.timeA11y", { time })} />
         <Tile
           sprite="torch"
           width={10}

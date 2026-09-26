@@ -5,7 +5,7 @@
 | Service | URL |
 |---------|-----|
 | **Marketing (Netlify)** | https://questvaultrpg.netlify.app |
-| **Web app / PWA (Railway)** | https://questvault-production.up.railway.app |
+| **Web app / PWA (Railway)** | https://questvault.lypes.agency (CNAME → Railway; also https://questvault-production.up.railway.app) |
 | **Backend (Convex)** | https://doting-wren-467.convex.cloud |
 | **GitHub** | https://github.com/FelipeGazapina/questvault |
 

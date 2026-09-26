@@ -31,6 +31,15 @@ npx @convex-dev/auth --web-server-url https://YOUR-RAILWAY-URL.up.railway.app
 
 Verify in [Convex Dashboard](https://dashboard.convex.dev) → **Settings** → **Environment Variables**: `JWT_PRIVATE_KEY` and `JWKS` must be set.
 
+**Password reset ("Esqueci minha senha"):** the guardian gets an 8-digit code by email, sent through [Resend](https://resend.com).
+
+| Convex env | Value |
+|------------|-------|
+| `AUTH_RESEND_KEY` | Resend API key |
+| `AUTH_EMAIL_FROM` | Optional sender override. Default: `QuestVault <contato@lypes.agency>` — `lypes.agency` must be verified in Resend. |
+
+Without `AUTH_RESEND_KEY` the app shows "we couldn't send the email" on the reset screen; sign-in keeps working.
+
 **PWA push notifications (Web Push, no Firebase/OneSignal):** uses VAPID keys on Convex + public key on Railway.
 
 ```powershell
@@ -84,7 +93,7 @@ The **Convex deploy** workflow (`.github/workflows/convex-deploy.yml`) runs on e
 
 | Variable | Value |
 |----------|--------|
-| `QV_WEB_APP_URL` | Railway URL **without** trailing slash, e.g. `https://questvault-production.up.railway.app` |
+| `QV_WEB_APP_URL` | Web app URL **without** trailing slash: `https://questvault.lypes.agency` (custom domain on Railway) |
 
 5. APK: the **Android APK** GitHub workflow publishes `questvault.apk` to the `android-latest` release on every push to `main` that touches `app/`. The build writes its URL to `config.js` (`QV_APK_URL`, override with the env var) once it exists — trigger a Netlify redeploy after the first release.
 
@@ -116,11 +125,11 @@ npx serve .
 
 ---
 
-## 5. Custom domains (optional)
+## 5. Custom domains
 
-- Netlify: `www.questvault.app` → marketing
-- Railway: `app.questvault.app` → web PWA
-- Set `QV_WEB_APP_URL=https://app.questvault.app` on Netlify
+- Railway: `questvault.lypes.agency` → web PWA. DNS: `CNAME questvault → 5a7589np.up.railway.app` (Railway issues the certificate once it resolves).
+- Netlify: `QV_WEB_APP_URL=https://questvault.lypes.agency` (set in `website/netlify.toml`).
+- A PWA is tied to its origin: people who installed it from the `*.up.railway.app` address need to install it again from the new domain (and re-enable notifications).
 
 ---
 

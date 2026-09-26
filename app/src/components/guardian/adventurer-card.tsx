@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Bar, Body, Button, Card, CrestBadge, Frame, Num, Seal, Sprite, Title } from "@/components/ui";
 import type { SpriteName } from "@/lib/art";
 import type { AdventurerSummary } from "@/lib/family";
-import { formatMinutes, T } from "@/lib/theme";
+import { formatCoins, formatMinutes, T } from "@/lib/theme";
 
 /** "11 anos · Nível 7 · Escudeiro". */
 export function useAdventurerLine() {
@@ -47,10 +47,12 @@ function Tile({ sprite, width, value, color, caption }: { sprite: SpriteName; wi
 export function AdventurerCard({
   a,
   onGiveTime,
+  onPenalty,
   onApps,
 }: {
   a: AdventurerSummary;
   onGiveTime: () => void;
+  onPenalty: () => void;
   onApps: () => void;
 }) {
   const { t } = useTranslation();
@@ -79,8 +81,8 @@ export function AdventurerCard({
         <Bar ratio={a.xpToNext ? a.xp / a.xpToNext : 0} />
       </View>
       <View style={styles.grid3}>
-        <Tile sprite="coin" width={24} value={String(a.coins)} color={T.coin} caption={t("guardian.painel.coins")} />
-        <Tile sprite="hourglass" width={22} value={formatMinutes(a.timeBankMin)} color={T.time} caption={t("guardian.painel.screen")} />
+        <Tile sprite="coin" width={24} value={formatCoins(a.coins)} color={a.coins < 0 ? T.bad : T.coin} caption={t("guardian.painel.coins")} />
+        <Tile sprite="hourglass" width={22} value={formatMinutes(a.timeBankMin)} color={a.timeBankMin < 0 ? T.bad : T.time} caption={t("guardian.painel.screen")} />
         <Tile
           sprite="board"
           width={26}
@@ -93,6 +95,7 @@ export function AdventurerCard({
         <Button label={t("guardian.painel.giveTime")} variant="ghost" onPress={onGiveTime} style={{ flex: 1 }} />
         <Button label={t("guardian.painel.appsOf", { name: a.name })} variant="ghost" onPress={onApps} style={{ flex: 1 }} />
       </View>
+      <Button label={t("guardian.painel.penalty")} variant="danger" onPress={onPenalty} />
     </Frame>
   );
 }

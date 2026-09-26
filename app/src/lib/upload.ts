@@ -47,8 +47,14 @@ export async function uploadToConvex(uploadUrl: string, uri: string, contentType
 /** Returns `upload(uri, contentType?)` → storage id, fetching a fresh upload URL per file. */
 export function useUpload() {
   const generateUploadUrl = useMutation(api.missions.generateUploadUrl);
+  const claimUpload = useMutation(api.missions.claimUpload);
   return useCallback(
-    async (uri: string, contentType?: string) => uploadToConvex(await generateUploadUrl({}), uri, contentType),
-    [generateUploadUrl],
+    async (uri: string, contentType?: string) => {
+      const storageId = await uploadToConvex(await generateUploadUrl({}), uri, contentType);
+      // Tie the file to this family so it can't be attached by another one.
+      await claimUpload({ storageId });
+      return storageId;
+    },
+    [generateUploadUrl, claimUpload],
   );
 }

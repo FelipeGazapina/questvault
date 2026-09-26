@@ -12,9 +12,11 @@ import {
   localParts,
   localTimeToMs,
   nextStreak,
+  penalizeTime,
   periodKeyFor,
   quietDelayMs,
   rankFor,
+  settleTimeDebt,
   shouldSpawn,
   spendTime,
   timeBalance,
@@ -93,4 +95,35 @@ test("allowance, choices and streaks", () => {
   assert.equal(nextStreak(4, "2026-09-24", "2026-09-25"), 5);
   assert.equal(nextStreak(4, "2026-09-25", "2026-09-25"), 4);
   assert.equal(nextStreak(4, "2026-09-20", "2026-09-25"), 1);
+});
+
+test("penalizeTime drains oldest-expiring grants, then leaves debt", () => {
+  const now = 1_000;
+  const grants = [
+    { remaining: 20, expiresAt: 9_000 },
+    { remaining: 15, expiresAt: 5_000 },
+    { remaining: 50, expiresAt: 500 }, // expired: untouched
+  ];
+  assert.deepEqual(penalizeTime(grants, 10, now), { remaining: [20, 5, 50], debt: 0 });
+  assert.deepEqual(penalizeTime(grants, 30, now), { remaining: [5, 0, 50], debt: 0 });
+  assert.deepEqual(penalizeTime(grants, 60, now), { remaining: [0, 0, 50], debt: 25 });
+  assert.deepEqual(penalizeTime([], 30, now), { remaining: [], debt: 30 });
+});
+
+test("settleTimeDebt pays oldest debt first and returns what's left", () => {
+  assert.deepEqual(settleTimeDebt([], 30), { debts: [], left: 30 });
+  assert.deepEqual(settleTimeDebt([10, 20], 15), { debts: [0, 15], left: 0 });
+  assert.deepEqual(settleTimeDebt([10, 20], 45), { debts: [0, 0], left: 15 });
+});
+
+test("a penalty bigger than the bank makes the balance negative until new time arrives", () => {
+  const now = 1_000;
+  const bank = [{ remaining: 10, expiresAt: 9_000 }];
+  const { remaining, debt } = penalizeTime(bank, 30, now);
+  const after = [{ remaining: remaining[0], expiresAt: 9_000 }, { remaining: -debt, expiresAt: Number.MAX_SAFE_INTEGER }];
+  assert.equal(timeBalance(after, now), -20);
+  assert.equal(spendTime(after, 1, now), null);
+  const { debts, left } = settleTimeDebt([debt], 30);
+  assert.deepEqual(debts, [0]);
+  assert.equal(left, 10);
 });

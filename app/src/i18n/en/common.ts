@@ -65,6 +65,8 @@ export const common = {
     DAILY_CAP: "That goes over today's screen-time limit.",
     SESSION_ACTIVE: "Screen time is already running.",
     PHOTO_REQUIRED: "This mission needs at least one photo.",
+    PENALTY_EMPTY: "Pick coins, time or both.",
+    PENALTY_REASON: "Give the reason in text or audio.",
     TOO_MANY_ATTEMPTS: "Too many attempts. Ask your guardian for a new code and start over.",
     REPORT_REQUIRED: "Tell how you did it: write or record audio.",
   },

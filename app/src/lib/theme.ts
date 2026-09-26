@@ -67,7 +67,14 @@ export function brl(cents: number): string {
 }
 
 /** "45 min" / "1 h 40 min". */
+/** Coin balance with a real minus sign (penalties can leave it negative). */
+export function formatCoins(n: number): string {
+  return n < 0 ? `−${-n}` : String(n);
+}
+
 export function formatMinutes(min: number): string {
+  // Penalties can leave the bank negative ("−20 min").
+  if (min < 0) return `−${formatMinutes(-min)}`;
   if (min < 60) return `${min} min`;
   const h = Math.floor(min / 60);
   const m = min % 60;

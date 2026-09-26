@@ -15,6 +15,7 @@ export type NoticeKind =
   | "pending_reminder"
   | "time_low"
   | "time_gift"
+  | "penalty"
   | "purchase"
   | "daily_summary";
 
@@ -34,6 +35,16 @@ export function rewardLabel(p: NoticeParams, locale: PushLocale): string {
       : `${p.coins} moedas ou ${p.minutes} min`;
   }
   return "";
+}
+
+/** "−50 moedas e −30 min" from coins + minutes params (amounts taken). */
+export function penaltyLabel(p: NoticeParams, locale: PushLocale): string {
+  const parts: string[] = [];
+  const coins = Number(p.coins ?? 0);
+  const minutes = Number(p.minutes ?? 0);
+  if (coins > 0) parts.push(locale === "en" ? `−${coins} coins` : `−${coins} moedas`);
+  if (minutes > 0) parts.push(locale === "en" ? `−${minutes} min of screen time` : `−${minutes} min de tela`);
+  return parts.join(locale === "en" ? " and " : " e ");
 }
 
 function proofLabel(p: NoticeParams, locale: PushLocale): string {
@@ -110,6 +121,14 @@ const COPY: Record<NoticeKind, Copy> = {
   time_gift: (p, l) => ({
     title: l === "en" ? `+${p.minutes} min of screen time` : `+${p.minutes} min de tela`,
     body: l === "en" ? "A gift from your guardian." : "Presente do Guardião.",
+  }),
+  penalty: (p, l) => ({
+    title: l === "en" ? `Penalty: ${penaltyLabel(p, l)}` : `Penalidade: ${penaltyLabel(p, l)}`,
+    body: p.reason
+      ? `“${p.reason}”`
+      : l === "en"
+        ? "Your guardian left you an audio message."
+        : "O Guardião deixou um recado em áudio.",
   }),
   purchase: (p, l) => ({
     title:

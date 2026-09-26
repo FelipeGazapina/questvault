@@ -166,6 +166,37 @@ export function spendTime(grants: TimeGrant[], minutes: number, now: number): nu
   return out;
 }
 
+/**
+ * A penalty takes minutes from the bank, oldest-expiring grants first. Whatever the bank
+ * can't cover becomes debt, so the balance goes negative until new time pays it off.
+ */
+export function penalizeTime(grants: TimeGrant[], minutes: number, now: number): { remaining: number[]; debt: number } {
+  const remaining = grants.map((g) => g.remaining);
+  let left = Math.max(0, minutes);
+  const order = grants
+    .map((g, i) => ({ g, i }))
+    .filter(({ g }) => g.expiresAt > now && g.remaining > 0)
+    .sort((a, b) => a.g.expiresAt - b.g.expiresAt);
+  for (const { g, i } of order) {
+    if (left <= 0) break;
+    const take = Math.min(g.remaining, left);
+    remaining[i] = g.remaining - take;
+    left -= take;
+  }
+  return { remaining, debt: left };
+}
+
+/** New minutes pay time debt first (oldest debt first). `debts` are amounts owed (positive). */
+export function settleTimeDebt(debts: number[], incoming: number): { debts: number[]; left: number } {
+  let left = Math.max(0, incoming);
+  const out = debts.map((owed) => {
+    const pay = Math.min(owed, left);
+    left -= pay;
+    return owed - pay;
+  });
+  return { debts: out, left };
+}
+
 /** Which reward the adventurer may pick for a mission's reward type. */
 export function allowedChoices(rewardType: RewardType): ChosenReward[] {
   if (rewardType === "choice") return ["coins", "time"];

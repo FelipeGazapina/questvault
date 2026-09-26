@@ -70,7 +70,7 @@ function XpProgress({ run, adventurer }: { run: Run; adventurer: AdventurerSumma
   );
 }
 
-function GuardianNote({ message }: { message: string }) {
+export function GuardianNote({ message }: { message: string }) {
   const { t } = useTranslation();
   const guardianName = useProfile().me?.family?.guardianName;
   return (

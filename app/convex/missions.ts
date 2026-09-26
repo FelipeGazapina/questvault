@@ -3,6 +3,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { requireAdventurer, requireFamily, requireGuardian } from "./access";
 import { notify } from "./notify";
+import { grantTime } from "./rewards";
 import {
   allowedChoices,
   applyXp,
@@ -325,6 +326,25 @@ export const generateUploadUrl = mutation({
   },
 });
 
+/**
+ * Record the uploader's family for a freshly uploaded file. Only the uploader ever sees the new
+ * storage id, so the first claim wins; a file claimed by another family is refused.
+ */
+export const claimUpload = mutation({
+  args: { storageId: v.id("_storage") },
+  returns: v.null(),
+  handler: async (ctx, { storageId }) => {
+    const { family } = await requireFamily(ctx);
+    const claim = await ctx.db.query("uploads").withIndex("by_storage", (q) => q.eq("storageId", storageId)).unique();
+    if (claim) {
+      if (claim.familyId !== family._id) throw new Error("Upload not found");
+      return null;
+    }
+    await ctx.db.insert("uploads", { storageId, familyId: family._id, createdAt: Date.now() });
+    return null;
+  },
+});
+
 export const submitRun = mutation({
   args: {
     runId: v.id("missionRuns"),
@@ -480,15 +500,7 @@ export const decide = mutation({
     const patch: Partial<Doc<"adventurers">> = {};
     if (chosen === "coins") patch.coins = adv.coins + run.coins;
     if (chosen === "time") {
-      await ctx.db.insert("timeGrants", {
-        familyId: family._id,
-        adventurerId: adv._id,
-        minutes: run.minutes,
-        remaining: run.minutes,
-        expiresAt: now + family.settings.timeExpiryDays * DAY,
-        source: "mission",
-        createdAt: now,
-      });
+      await grantTime(ctx, family, adv._id, run.minutes, "mission");
     }
     if (chosen === "item") {
       await ctx.db.insert("purchases", {

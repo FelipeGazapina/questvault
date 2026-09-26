@@ -65,6 +65,8 @@ export const common = {
     DAILY_CAP: "Isso passa do limite de tela de hoje.",
     SESSION_ACTIVE: "Já há um tempo de tela em uso.",
     PHOTO_REQUIRED: "Essa missão pede pelo menos uma foto.",
+    PENALTY_EMPTY: "Escolha moedas, tempo ou os dois.",
+    PENALTY_REASON: "Explique o motivo em texto ou áudio.",
     TOO_MANY_ATTEMPTS: "Muitas tentativas. Peça um código novo ao Guardião e comece de novo.",
     REPORT_REQUIRED: "Conte como você fez: escreva ou grave um áudio.",
   },

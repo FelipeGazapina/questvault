@@ -84,7 +84,7 @@ export default function AdventurerShop() {
         </Title>
         <View style={styles.coins}>
           <Sprite name="coin" width={20} />
-          <Num color={T.coin}>{t("adventurer.shop.coins", { count: market.coins })}</Num>
+          <Num color={market.coins < 0 ? T.bad : T.coin}>{t("adventurer.shop.coins", { count: market.coins })}</Num>
         </View>
       </View>
 
