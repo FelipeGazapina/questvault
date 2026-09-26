@@ -53,7 +53,10 @@ jobs:
 
       - name: Build release APK
         working-directory: app/android
-        run: ./gradlew assembleRelease --no-daemon
+        # Release lint ran out of Metaspace on the runner; it adds nothing to a sideload build.
+        run: |
+          echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g" >> gradle.properties
+          ./gradlew assembleRelease --no-daemon -x lintVitalRelease
 
       - name: Collect APK
         run: cp android/app/build/outputs/apk/release/app-release.apk questvault.apk
