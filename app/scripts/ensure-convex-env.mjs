@@ -14,6 +14,7 @@
  */
 import { execFileSync } from "node:child_process";
 import { generateKeyPairSync } from "node:crypto";
+import { createLocalJWKSet, importPKCS8, jwtVerify, SignJWT } from "jose";
 import webpush from "web-push";
 
 const npx = process.platform === "win32" ? "npx.cmd" : "npx";
@@ -27,6 +28,23 @@ function existingNames() {
       .map((line) => /^([A-Z0-9_]+)=/.exec(line)?.[1])
       .filter(Boolean),
   );
+}
+
+function getVar(name) {
+  return execFileSync(npx, ["convex", "env", "get", name], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+}
+
+/** Sign and verify a test token exactly as Convex Auth does; false if the pair can't sign in anyone. */
+async function authKeysWork() {
+  try {
+    const privateKey = await importPKCS8(getVar("JWT_PRIVATE_KEY"), "RS256");
+    const token = await new SignJWT({ sub: "check" }).setProtectedHeader({ alg: "RS256" }).setIssuedAt().setExpirationTime("1m").sign(privateKey);
+    await jwtVerify(token, createLocalJWKSet(JSON.parse(getVar("JWKS"))));
+    return true;
+  } catch (e) {
+    console.log(`JWT keys don't work (${e instanceof Error ? e.name : "error"})`);
+    return false;
+  }
 }
 
 function setVar(name, value) {
@@ -44,10 +62,10 @@ function authKeys() {
   };
 }
 
-function main() {
+async function main() {
   const have = existingNames();
 
-  if (!have.has("JWT_PRIVATE_KEY") || !have.has("JWKS")) {
+  if (!have.has("JWT_PRIVATE_KEY") || !have.has("JWKS") || !(await authKeysWork())) {
     // The two must match: regenerate both together.
     const keys = authKeys();
     setVar("JWT_PRIVATE_KEY", keys.JWT_PRIVATE_KEY);
@@ -75,4 +93,4 @@ function main() {
   console.log(missing.length ? `Still missing: ${missing.join(", ")}` : "All app variables are set.");
 }
 
-main();
+await main();

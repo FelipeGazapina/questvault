@@ -5,7 +5,7 @@ name: Convex deploy
 on:
   push:
     branches: [main]
-    paths: ["app/convex/**", "app/package.json", "app/package-lock.json", ".github/workflows/convex-deploy.yml"]
+    paths: ["app/convex/**", "app/scripts/ensure-convex-env.mjs", "app/package.json", "app/package-lock.json", ".github/workflows/convex-deploy.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -33,6 +33,10 @@ jobs:
       - run: npm ci
 
       - run: npm test
+
+      - name: Recent backend errors (before deploy)
+        # Diagnostics only: the last function errors, so a broken sign-in shows up in this log.
+        run: timeout 30s npx convex logs --history 150 2>/dev/null | grep -iE "error|uncaught|fail" | tail -40 || true
 
       - name: Ensure deployment variables
         env:
